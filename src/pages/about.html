@@ -3,48 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - Throwing Eights</title>
+    <meta name="description" content="Throwing Eights - Melbourne's premier MTG analytics platform. Learn about our mission to revolutionize Magic: The Gathering through data-driven insights and cutting-edge technology.">
+    <meta name="keywords" content="Magic The Gathering, MTG, deck analysis, statistics, Melbourne tech, gaming analytics, data-driven gaming">
+    <meta name="author" content="Throwing Eights">
+    <title>About Us - Throwing Eights | Melbourne's MTG Analytics Experts</title>
     <link rel="stylesheet" href="../styles/main.css">
+    <!-- Ensure main.css includes styles for new sections -->
 </head>
 <body>
     <header>
-        <nav>
+        <nav role="navigation" aria-label="Main navigation">
             <ul>
                 <li><a href="../index.html">Home</a></li>
-                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="about.html" class="active" aria-current="page">About</a></li>
                 <li><a href="contact.html">Contact</a></li>
             </ul>
         </nav>
     </header>
 
-    <main>
-        <section class="about-section">
-            <h1>About Throwing Eights</h1>
-            <div class="about-content">
-                <img src="../images/throwing-eights-logo.png" alt="Throwing Eights Logo" class="about-image">
-                <p>Welcome to Throwing Eights, where statistics meet passion. Our platform is dedicated to helping users understand and improve their Magic: The Gathering gameplay through data-driven insights.</p>
-                
-                <h2>Our Mission</h2>
-                <p>At Throwing Eights, we believe that understanding statistics and probability can significantly enhance your Magic: The Gathering experience. Our mission is to provide players with tools and insights that help them make better deck-building decisions and improve their gameplay strategies.</p>
+    <main id="main-content" role="main">
+        <!-- Company Section -->
+        <section class="company-section" aria-labelledby="company-heading">
+            <h1 id="company-heading">About Throwing Eights</h1>
+            
+            <div class="company-intro">
+                <img src="../images/throwing-eights-logo.png" alt="Throwing Eights Logo" class="about-image" width="300" height="300">
+                <p>Born in the vibrant tech scene of Melbourne, Throwing Eights emerged from a shared passion for Magic: The Gathering and data analytics. Our journey began when two enthusiasts, Manu and Jamaica, recognized the need for sophisticated statistical tools in the MTG community.</p>
+            </div>
 
-                <h2>What We Offer</h2>
-                <ul class="features-list">
-                    <li>Detailed deck analysis and statistics</li>
-                    <li>Probability calculations for card draws</li>
-                    <li>Mana curve optimization tools</li>
-                    <li>Interactive deck testing simulations</li>
-                </ul>
+            <div class="company-values">
+                <h2>Our Core Values</h2>
+                <div class="values-grid">
+                    <div class="value-card">
+                        <h3>Innovation First</h3>
+                        <p>We constantly push the boundaries of what's possible in MTG analytics, embracing cutting-edge technology to deliver unprecedented insights.</p>
+                    </div>
+                    <div class="value-card">
+                        <h3>Community Driven</h3>
+                        <p>Our Melbourne roots have taught us the importance of community. We're building more than tools - we're fostering a community of data-driven players.</p>
+                    </div>
+                    <div class="value-card">
+                        <h3>Technical Excellence</h3>
+                        <p>With our background in software development and data science, we maintain the highest standards in every feature we deliver.</p>
+                    </div>
+                </div>
+            </div>
 
-                <h2>Our Team</h2>
-                <p>Our team consists of passionate Magic: The Gathering players and data enthusiasts who understand both the game's complexity and the importance of statistical analysis in competitive play.</p>
+            <div class="company-culture">
+                <h2>Our Culture</h2>
+                <p>At Throwing Eights, we blend Melbourne's innovative tech culture with our passion for MTG. Our team culture emphasizes continuous learning, open collaboration, and a deep appreciation for both the technical and creative aspects of game analysis.</p>
+            </div>
+        </section>
 
-                <h2>Why "Throwing Eights"?</h2>
-                <p>The name "Throwing Eights" is inspired by the classic Magic playing term of "throwing bolts," combined with the mathematical symbol for infinity (∞). It represents our commitment to endless possibilities in deck building and our focus on the mathematical aspects of the game.</p>
+        <!-- Vision Section -->
+        <section class="vision-section" aria-labelledby="vision-heading">
+            <h2 id="vision-heading">Our Vision</h2>
+            
+            <div class="mission-statement">
+                <h3>Mission</h3>
+                <p>To revolutionize how players understand and interact with Magic: The Gathering through advanced analytics and machine learning, making professional-grade insights accessible to every player.</p>
+            </div>
+
+            <div class="long-term-goals">
+                <h3>Where We're Heading</h3>
+                <p>Our goal is to become the global standard for MTG analytics, recognized not just for our technical excellence but for our contribution to the game's competitive evolution and community growth.</p>
+            </div>
+
+            <div class="impact-statement">
+                <h3>Our Impact</h3>
+                <p>We're working to democratize high-level MTG analysis, making professional-grade insights accessible to players of all levels while fostering a more data-informed and competitive community.</p>
+            </div>
+        </section>
+
+        <!-- Founders Section -->
+        <section class="founders-section" aria-labelledby="founders-heading">
+            <h2 id="founders-heading">Meet Our Founders</h2>
+            
+            <div class="founders-grid">
+                <article class="founder-card">
+                    <h3>Manu</h3>
+                    <div class="founder-content">
+                        <img src="../images/founder-manu.jpg" alt="Manu - Co-founder" class="founder-image" width="200" height="200">
+                        <div class="founder-details">
+                            <p class="founder-background">With a background in software engineering and data science, Manu brings technical expertise in machine learning and statistical analysis.</p>
+                            <p class="founder-mission">"My goal is to bridge the gap between complex data analysis and practical gameplay insights, making advanced statistics accessible to every player."</p>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="founder-card">
+                    <h3>Jamaica</h3>
+                    <div class="founder-content">
+                        <img src="../images/founder-jamaica.jpg" alt="Jamaica - Co-founder" class="founder-image" width="200" height="200">
+                        <div class="founder-details">
+                            <p class="founder-background">Jamaica combines competitive MTG experience with expertise in UX design and full-stack development, ensuring our tools are both powerful and user-friendly.</p>
+                            <p class="founder-mission">"I believe that data-driven insights should enhance, not complicate, the gaming experience. We're building tools that I wish I had when I started competing."</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Future Section -->
+        <section class="future-section" aria-labelledby="future-heading">
+            <h2 id="future-heading">Looking Ahead</h2>
+
+            <div class="future-content">
+                <div class="growth-plans">
+                    <h3>Growth Strategy</h3>
+                    <p>Based in Melbourne's thriving tech scene, we're expanding our team with local talent while building a global presence in the MTG analytics space.</p>
+                </div>
+
+                <div class="tech-focus">
+                    <h3>Technology Roadmap</h3>
+                    <p>Our development focuses on advanced AI/ML capabilities, real-time analysis tools, and enhanced mobile experiences, always prioritizing performance and accessibility.</p>
+                </div>
+
+                <div class="future-services">
+                    <h3>Upcoming Features</h3>
+                    <p>We're developing new tools for tournament preparation, meta-game analysis, and collaborative deck building, all powered by our next-generation analytics engine.</p>
+                </div>
             </div>
         </section>
     </main>
 
-    <footer>
+    <footer role="contentinfo">
         <p>&copy; 2024 Throwing Eights. All rights reserved.</p>
     </footer>
 
