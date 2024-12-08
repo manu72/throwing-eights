@@ -82,8 +82,8 @@ The website can be deployed to any static hosting service. Some recommended opti
 
 ## 📞 Contact
 
-- Website: [www.throwingeights.com](http://www.throwingeights.com)
-- Email: contact@throwingeights.com
+- Website: [www.throwingeights.com.au](http://www.throwingeights.com.au)
+- Email: contact@throwingeights.com.au
 - Location: Melbourne, Australia
 
 ## 📄 License
