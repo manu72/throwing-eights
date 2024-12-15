@@ -11,6 +11,12 @@
     <link rel="stylesheet" href="assets/css/main.css" />
   </head>
   <body class="subpage">
+    <!-- Add this right after the opening <body> tag -->
+    <div id="imageModal" class="modal">
+      <span class="modal-close">&times;</span>
+      <img class="modal-content" id="modalImage">
+    </div>
+
     <!-- Header -->
     <header id="header" class="alt">
       <div class="logo">
@@ -87,41 +93,55 @@
             <h3>The Founders</h3>
             <div class="founders-section">
               <div class="founder">
-                <h4>Jamaica</h4>
-                <p>
-                  Jamaica combines deep technical knowledge with extensive expertise in project management 
-                  and quality assurance. With many years of experience as a senior test manager, 
-                  he brings a comprehensive approach to software development that ensures both 
-                  technical excellence and robust quality standards. His understanding of user 
-                  experience design and testing methodologies focuses on creating solutions that are 
-                  both powerful and reliable.
-                </p>
-                <p>
-                  With expertise in front-end technologies, test automation, and quality processes, 
-                  Jamaica leads our efforts in creating software that doesn't just work well – it 
-                  delivers consistent, high-quality experiences that users can depend on. His 
-                  commitment to human-centered design principles and comprehensive testing ensures 
-                  that our solutions truly serve the people who use them while maintaining the 
-                  highest standards of quality.
-                </p>
+                <div class="founder-content">
+                  <div class="founder-image">
+                    <img src="images/jamaica.jpg" alt="Jamaica - Senior Test Manager" />
+                  </div>
+                  <div class="founder-text">
+                    <h4>Jamaica</h4>
+                    <p>
+                      Jamaica combines deep technical knowledge with extensive expertise in project management 
+                      and quality assurance. With many years of experience as a senior test manager, 
+                      he brings a comprehensive approach to software development that ensures both 
+                      technical excellence and robust quality standards. His understanding of user 
+                      experience design and testing methodologies focuses on creating solutions that are 
+                      both powerful and reliable.
+                    </p>
+                    <p>
+                      With expertise in front-end technologies, test automation, and quality processes, 
+                      Jamaica leads our efforts in creating software that doesn't just work well – it 
+                      delivers consistent, high-quality experiences that users can depend on. His 
+                      commitment to human-centered design principles and comprehensive testing ensures 
+                      that our solutions truly serve the people who use them while maintaining the 
+                      highest standards of quality.
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <div class="founder">
-                <h4>Manu</h4>
-                <p>
-                  A veteran software architect with over two decades of
-                  experience in building enterprise-scale applications, Manu
-                  brings technical excellence and strategic vision to Throwing
-                  Eights. His expertise in system design and passion for clean,
-                  efficient code forms the backbone of our technical approach.
-                </p>
-                <p>
-                  With a background spanning multiple industries and
-                  technologies, Manu ensures that our solutions are not just
-                  cutting-edge, but also robust and scalable. His philosophy of
-                  "simplicity in design, excellence in execution" drives our
-                  development methodology.
-                </p>
+                <div class="founder-content">
+                  <div class="founder-image">
+                    <img src="images/manu.jpg" alt="Manu - Software Architect" />
+                  </div>
+                  <div class="founder-text">
+                    <h4>Manu</h4>
+                    <p>
+                      A veteran software architect with over two decades of
+                      experience in building enterprise-scale applications, Manu
+                      brings technical excellence and strategic vision to Throwing
+                      Eights. His expertise in system design and passion for clean,
+                      efficient code forms the backbone of our technical approach.
+                    </p>
+                    <p>
+                      With a background spanning multiple industries and
+                      technologies, Manu ensures that our solutions are not just
+                      cutting-edge, but also robust and scalable. His philosophy of
+                      "simplicity in design, excellence in execution" drives our
+                      development methodology.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -223,5 +243,6 @@
     <script src="assets/js/skel.min.js"></script>
     <script src="assets/js/util.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/modal.js"></script>
   </body>
 </html>
