@@ -78,26 +78,30 @@
 }
 
 .preview-container {
+  position: relative;
   display: flex;
-  gap: 2em;
-  margin: 1em 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
 .preview-light, .preview-dark {
-  flex: 1;
-  padding: 2em;
+  display: none;
+  background: white;
+  padding: 1rem;
   border-radius: 4px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.preview-light {
-  background: #fff;
 }
 
 .preview-dark {
-  background: #1b1b1b;
+  background: black;
+}
+
+.preview-light.active, .preview-dark.active {
+  display: block;
+}
+
+#switch-bg {
+  margin-top: 0.5rem;
 }
 
 .preview-controls {
