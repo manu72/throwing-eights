@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>QR Code Generator | Throwing Eights</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Generate customizable QR codes with style options including colors, size, and logo integration." />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="assets/css/qr-generator.css" />
+    <!-- QR Code library -->
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs@master/qrcode.min.js"></script>
+    <!-- Color picker -->
+    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" />
+  </head>
+  <body class="subpage">
+    <!-- Header -->
+    <header id="header" class="alt">
+      <div class="logo">
+        <a href="/">Throwing Eights <span>by 16 Hours</span></a>
+      </div>
+      <a href="#menu"><span>Menu</span></a>
+    </header>
+
+    <!-- Nav -->
+    <nav id="menu">
+      <ul class="links">
+        <li><a href="/">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="qr-generator.html">QR Generator</a></li>
+        <li><a href="#footer">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Content -->
+    <section id="post" class="wrapper bg-img" data-bg="banner2.jpg">
+      <div class="inner">
+        <article class="box">
+          <header>
+            <h2>QR Code Generator</h2>
+            <p>Create custom QR codes with style</p>
+          </header>
+          <div class="content">
+            <div class="qr-generator">
+              <div class="qr-form">
+                <div class="url-input">
+                  <label for="url">Enter URL</label>
+                  <input type="url" id="url" name="url" placeholder="https://example.com" required />
+                  <span class="validation-message"></span>
+                </div>
+
+                <div class="style-options">
+                  <h3>Style Options</h3>
+                  
+                  <div class="option-group">
+                    <label for="size">Size</label>
+                    <div class="size-control">
+                      <input type="range" id="size" name="size" min="128" max="512" value="256" />
+                      <span class="size-value">256 x 256</span>
+                    </div>
+                  </div>
+
+                  <div class="option-group">
+                    <label>Colors</label>
+                    <div class="color-pickers">
+                      <div class="color-picker-wrapper">
+                        <label>Foreground</label>
+                        <div id="foreground-picker"></div>
+                      </div>
+                      <div class="color-picker-wrapper">
+                        <label>Background</label>
+                        <div id="background-picker"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="option-group">
+                    <label for="corner-style">Corner Style</label>
+                    <select id="corner-style" name="corner-style">
+                      <option value="sharp">Sharp</option>
+                      <option value="rounded">Rounded</option>
+                    </select>
+                  </div>
+
+                  <div class="option-group">
+                    <label for="error-correction">Error Correction</label>
+                    <select id="error-correction" name="error-correction">
+                      <option value="L">Low (7%)</option>
+                      <option value="M" selected>Medium (15%)</option>
+                      <option value="Q">Quartile (25%)</option>
+                      <option value="H">High (30%)</option>
+                    </select>
+                    <div class="tooltip">
+                      Higher correction levels allow for more damage to the QR code while remaining scannable
+                    </div>
+                  </div>
+
+                  <div class="option-group">
+                    <label for="logo">Center Logo</label>
+                    <input type="file" id="logo" name="logo" accept="image/*" />
+                    <div class="tooltip">
+                      Recommended: small, square image with transparent background
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qr-preview">
+                <h3>Preview</h3>
+                <div class="preview-container">
+                  <div class="preview-light"></div>
+                  <div class="preview-dark"></div>
+                </div>
+                <div class="preview-controls">
+                  <button id="download-btn" class="button special">Download QR Code</button>
+                  <div class="format-options">
+                    <label>
+                      <input type="radio" name="format" value="png" checked> PNG
+                    </label>
+                    <label>
+                      <input type="radio" name="format" value="svg"> SVG
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer">
+      <div class="inner">
+        <h2>Contact Us</h2>
+        <form action="#" method="post">
+          <div class="field half first">
+            <label for="name">Name</label>
+            <input name="name" id="name" type="text" placeholder="Name">
+          </div>
+          <div class="field half">
+            <label for="email">Email</label>
+            <input name="email" id="email" type="email" placeholder="Email">
+          </div>
+          <div class="field">
+            <label for="message">Message</label>
+            <textarea name="message" id="message" rows="6" placeholder="Message"></textarea>
+          </div>
+          <ul class="actions">
+            <li><input value="Send Message" class="button alt" type="submit"></li>
+          </ul>
+        </form>
+      </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/skel.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/qr-generator.js"></script>
+  </body>
+</html> 

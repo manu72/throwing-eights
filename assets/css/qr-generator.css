@@ -1,0 +1,161 @@
+.qr-generator {
+  display: flex;
+  gap: 2em;
+  margin-top: 2em;
+}
+
+.qr-form {
+  flex: 1;
+  min-width: 300px;
+}
+
+.qr-preview {
+  flex: 1;
+  min-width: 300px;
+}
+
+.url-input {
+  margin-bottom: 2em;
+}
+
+.url-input input {
+  width: 100%;
+  padding: 0.75em;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.075);
+  border-radius: 4px;
+  color: #fff;
+}
+
+.validation-message {
+  color: #F64747;
+  font-size: 0.9em;
+  margin-top: 0.5em;
+  display: block;
+}
+
+.style-options {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5em;
+  border-radius: 4px;
+}
+
+.option-group {
+  margin-bottom: 1.5em;
+}
+
+.option-group:last-child {
+  margin-bottom: 0;
+}
+
+.option-group label {
+  display: block;
+  margin-bottom: 0.5em;
+}
+
+.size-control {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.size-control input[type="range"] {
+  flex: 1;
+}
+
+.size-value {
+  min-width: 80px;
+  text-align: right;
+}
+
+.color-pickers {
+  display: flex;
+  gap: 1em;
+}
+
+.color-picker-wrapper {
+  flex: 1;
+}
+
+.preview-container {
+  display: flex;
+  gap: 2em;
+  margin: 1em 0;
+}
+
+.preview-light, .preview-dark {
+  flex: 1;
+  padding: 2em;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.preview-light {
+  background: #fff;
+}
+
+.preview-dark {
+  background: #1b1b1b;
+}
+
+.preview-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  align-items: center;
+  margin-top: 1em;
+}
+
+.format-options {
+  display: flex;
+  gap: 1em;
+}
+
+.tooltip {
+  font-size: 0.9em;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 0.5em;
+}
+
+/* Mobile Responsive */
+@media screen and (max-width: 980px) {
+  .qr-generator {
+    flex-direction: column;
+  }
+
+  .preview-container {
+    flex-direction: column;
+  }
+
+  .color-pickers {
+    flex-direction: column;
+  }
+}
+
+/* Loading State */
+.loading {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2em;
+  height: 2em;
+  margin: -1em 0 0 -1em;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #F64747;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+} 
