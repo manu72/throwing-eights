@@ -10,6 +10,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewLight = document.querySelector('.preview-light');
     const previewDark = document.querySelector('.preview-dark');
 
+    // Update size input default value
+    sizeInput.value = 140;
+    sizeValue.textContent = '140 x 140';
+
     // Initialize color pickers
     const foregroundPicker = Pickr.create({
         el: '#foreground-picker',
@@ -48,8 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // State object to track current settings
     let currentSettings = {
         text: "https://throwingeights.com.au",
-        width: 256,
-        height: 256,
+        width: 140,
+        height: 140,
         colorDark: "#000000",
         colorLight: "#FFFFFF",
         correctLevel: QRCode.CorrectLevel.M,
