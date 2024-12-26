@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const downloadBtn = document.getElementById('download-btn');
     const previewLight = document.querySelector('.preview-light');
     const previewDark = document.querySelector('.preview-dark');
+    const switchBgBtn = document.getElementById('switch-bg');
 
     // Update size input default value
     sizeInput.value = 140;
@@ -57,7 +58,8 @@ document.addEventListener('DOMContentLoaded', function() {
         colorDark: "#000000",
         colorLight: "#FFFFFF",
         correctLevel: QRCode.CorrectLevel.M,
-        logo: null
+        logo: null,
+        isDarkMode: false // track which background is active
     };
 
     // Clear existing content
@@ -157,50 +159,103 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Download functionality
+    // Function to toggle preview
+    function togglePreview() {
+        currentSettings.isDarkMode = !currentSettings.isDarkMode;
+        previewLight.classList.toggle('active');
+        previewDark.classList.toggle('active');
+        switchBgBtn.textContent = currentSettings.isDarkMode ? 'Switch to Light Background' : 'Switch to Dark Background';
+    }
+
+    // Add switch button listener
+    switchBgBtn.addEventListener('click', togglePreview);
+
+    // Modify download functionality to only use active preview
     downloadBtn.addEventListener('click', function() {
         const format = document.querySelector('input[name="format"]:checked').value;
-        const container = previewLight; // Use light version for download
+        const activePreview = currentSettings.isDarkMode ? previewDark : previewLight;
         
         if (format === 'png') {
-            // For PNG, we'll create a canvas to combine QR code and logo
+            // Create canvas for single QR code
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            canvas.width = currentSettings.width;
-            canvas.height = currentSettings.height;
+            const padding = 20;
+            const textHeight = 40;
+            const qrSize = currentSettings.width;
+            
+            // Set canvas size for single QR code
+            canvas.width = padding * 2 + qrSize;
+            canvas.height = padding * 2 + qrSize + textHeight;
+            
+            // Fill background
+            ctx.fillStyle = currentSettings.isDarkMode ? '#000000' : '#FFFFFF';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Add URL text at the top
+            ctx.fillStyle = currentSettings.isDarkMode ? '#FFFFFF' : '#000000';
+            ctx.font = '16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(currentSettings.text, canvas.width / 2, padding + 20);
             
             // Draw QR code
-            const qrImage = container.querySelector('img');
-            ctx.drawImage(qrImage, 0, 0, canvas.width, canvas.height);
+            const qrImage = activePreview.querySelector('img');
+            ctx.drawImage(qrImage, padding, padding + textHeight, qrSize, qrSize);
             
-            // Draw logo if present
+            // If there's a logo, add it
             if (currentSettings.logo) {
-                const logoSize = currentSettings.width * 0.2;
-                const logoX = (canvas.width - logoSize) / 2;
-                const logoY = (canvas.height - logoSize) / 2;
-                
                 const logo = new Image();
                 logo.onload = function() {
+                    const logoSize = qrSize * 0.2;
+                    const logoX = padding + (qrSize - logoSize) / 2;
+                    const logoY = padding + textHeight + (qrSize - logoSize) / 2;
                     ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
-                    // Create download link
-                    const link = document.createElement('a');
-                    link.download = 'qr-code.png';
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
+                    downloadCanvas(canvas);
                 };
                 logo.src = currentSettings.logo;
             } else {
-                // If no logo, download immediately
-                const link = document.createElement('a');
-                link.download = 'qr-code.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
+                downloadCanvas(canvas);
             }
         } else {
             // For SVG
-            const svgElement = container.querySelector('svg');
-            if (svgElement) {
-                const svgData = new XMLSerializer().serializeToString(svgElement);
+            const svg = activePreview.querySelector('svg');
+            
+            if (svg) {
+                const svgNS = "http://www.w3.org/2000/svg";
+                const wrapper = document.createElementNS(svgNS, "svg");
+                const padding = 20;
+                const textHeight = 40;
+                const qrSize = currentSettings.width;
+                
+                wrapper.setAttribute("width", (padding * 2 + qrSize).toString());
+                wrapper.setAttribute("height", (padding * 2 + qrSize + textHeight).toString());
+                wrapper.setAttribute("xmlns", svgNS);
+                
+                // Add background
+                const rect = document.createElementNS(svgNS, "rect");
+                rect.setAttribute("width", "100%");
+                rect.setAttribute("height", "100%");
+                rect.setAttribute("fill", currentSettings.isDarkMode ? "#000000" : "#FFFFFF");
+                wrapper.appendChild(rect);
+                
+                // Add URL text
+                const text = document.createElementNS(svgNS, "text");
+                text.setAttribute("x", (padding * 2 + qrSize) / 2);
+                text.setAttribute("y", padding + 20);
+                text.setAttribute("text-anchor", "middle");
+                text.setAttribute("font-family", "Arial");
+                text.setAttribute("font-size", "16");
+                text.setAttribute("fill", currentSettings.isDarkMode ? "#FFFFFF" : "#000000");
+                text.textContent = currentSettings.text;
+                wrapper.appendChild(text);
+                
+                // Add QR code
+                const qrGroup = document.createElementNS(svgNS, "g");
+                qrGroup.setAttribute("transform", `translate(${padding},${padding + textHeight})`);
+                qrGroup.innerHTML = svg.innerHTML;
+                wrapper.appendChild(qrGroup);
+                
+                // Download the SVG
+                const svgData = new XMLSerializer().serializeToString(wrapper);
                 const blob = new Blob([svgData], { type: 'image/svg+xml' });
                 const link = document.createElement('a');
                 link.download = 'qr-code.svg';
@@ -210,6 +265,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Helper function for downloading canvas
+    function downloadCanvas(canvas) {
+        const link = document.createElement('a');
+        link.download = 'qr-code.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }
+
     // Initial QR code generation
     updateQRCodes();
+
+    // Initialize UI
+    previewLight.classList.add('active'); // Start with light mode
+    switchBgBtn.textContent = 'Switch to Dark Background';
 }); 
