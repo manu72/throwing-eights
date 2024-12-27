@@ -192,95 +192,117 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Update the canvas generation in both PNG and SVG sections
     function createDownloadCanvas(qrImage, format) {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        
-        // Match SVG proportions
-        const padding = 40;
-        const textHeight = 30;
-        const qrSize = currentSettings.width;
-        const frameSize = qrSize + 40;
-        
-        // Set canvas size to match SVG
-        canvas.width = frameSize + (padding * 2);
-        canvas.height = frameSize + (padding * 2) + (textHeight * 2);
-        
-        // Fill background
-        ctx.fillStyle = currentSettings.isDarkMode ? '#000000' : '#FFFFFF';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        // Add "SCAN ME" text at the top with consistent spacing
-        ctx.fillStyle = currentSettings.isDarkMode ? '#FFFFFF' : '#000000';
-        ctx.font = 'bold 24px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('SCAN ME', canvas.width / 2, padding);
-        
-        // Draw frame corners
-        const cornerLength = 40;
-        const frameX = padding;
-        const frameY = padding + textHeight;
-        ctx.strokeStyle = '#0088ff';
-        ctx.lineWidth = 4;
-        
-        // Top-left corner
-        ctx.beginPath();
-        ctx.moveTo(frameX, frameY + cornerLength);
-        ctx.lineTo(frameX, frameY);
-        ctx.lineTo(frameX + cornerLength, frameY);
-        ctx.stroke();
-        
-        // Top-right corner
-        ctx.beginPath();
-        ctx.moveTo(frameX + frameSize - cornerLength, frameY);
-        ctx.lineTo(frameX + frameSize, frameY);
-        ctx.lineTo(frameX + frameSize, frameY + cornerLength);
-        ctx.stroke();
-        
-        // Bottom-left corner
-        ctx.beginPath();
-        ctx.moveTo(frameX, frameY + frameSize - cornerLength);
-        ctx.lineTo(frameX, frameY + frameSize);
-        ctx.lineTo(frameX + cornerLength, frameY + frameSize);
-        ctx.stroke();
-        
-        // Bottom-right corner
-        ctx.beginPath();
-        ctx.moveTo(frameX + frameSize - cornerLength, frameY + frameSize);
-        ctx.lineTo(frameX + frameSize, frameY + frameSize);
-        ctx.lineTo(frameX + frameSize, frameY + frameSize - cornerLength);
-        ctx.stroke();
-        
-        // Draw QR code (centered within frame)
-        const qrX = padding + 20;
-        const qrY = padding + textHeight + 20;
-        ctx.drawImage(qrImage, qrX, qrY, qrSize, qrSize);
-        
-        // Add URL text at the bottom with consistent spacing
-        ctx.font = '16px Arial';
-        ctx.fillStyle = currentSettings.isDarkMode ? '#FFFFFF' : '#000000';
-        ctx.fillText(currentSettings.text, canvas.width / 2, frameSize + (padding * 2) + textHeight);
-        
-        // If there's a logo, add it
-        if (currentSettings.logo) {
-            const logoSize = qrSize * 0.2;
-            const logoX = qrX + (qrSize - logoSize) / 2;
-            const logoY = qrY + (qrSize - logoSize) / 2;
-            ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
-        }
-        
-        return canvas;
+        return new Promise((resolve, reject) => {
+            // Create a temporary image to ensure the QR code is fully loaded
+            const tempImage = new Image();
+            tempImage.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Match SVG proportions
+                const padding = 40;
+                const textHeight = 30;
+                const qrSize = currentSettings.width;
+                const frameSize = qrSize + 40;
+                
+                // Set canvas size to match SVG
+                canvas.width = frameSize + (padding * 2);
+                canvas.height = frameSize + (padding * 2) + (textHeight * 2);
+                
+                // Fill background
+                ctx.fillStyle = currentSettings.isDarkMode ? '#000000' : '#FFFFFF';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Add "SCAN ME" text at the top with consistent spacing
+                ctx.fillStyle = currentSettings.isDarkMode ? '#FFFFFF' : '#000000';
+                ctx.font = 'bold 24px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('SCAN ME', canvas.width / 2, padding);
+                
+                // Draw frame corners
+                const cornerLength = 40;
+                const frameX = padding;
+                const frameY = padding + textHeight;
+                ctx.strokeStyle = '#0088ff';
+                ctx.lineWidth = 4;
+                
+                // Top-left corner
+                ctx.beginPath();
+                ctx.moveTo(frameX, frameY + cornerLength);
+                ctx.lineTo(frameX, frameY);
+                ctx.lineTo(frameX + cornerLength, frameY);
+                ctx.stroke();
+                
+                // Top-right corner
+                ctx.beginPath();
+                ctx.moveTo(frameX + frameSize - cornerLength, frameY);
+                ctx.lineTo(frameX + frameSize, frameY);
+                ctx.lineTo(frameX + frameSize, frameY + cornerLength);
+                ctx.stroke();
+                
+                // Bottom-left corner
+                ctx.beginPath();
+                ctx.moveTo(frameX, frameY + frameSize - cornerLength);
+                ctx.lineTo(frameX, frameY + frameSize);
+                ctx.lineTo(frameX + cornerLength, frameY + frameSize);
+                ctx.stroke();
+                
+                // Bottom-right corner
+                ctx.beginPath();
+                ctx.moveTo(frameX + frameSize - cornerLength, frameY + frameSize);
+                ctx.lineTo(frameX + frameSize, frameY + frameSize);
+                ctx.lineTo(frameX + frameSize, frameY + frameSize - cornerLength);
+                ctx.stroke();
+                
+                // Draw QR code (centered within frame)
+                const qrX = padding + 20;
+                const qrY = padding + textHeight + 20;
+                ctx.drawImage(tempImage, qrX, qrY, qrSize, qrSize);
+                
+                // Add URL text at the bottom with consistent spacing
+                ctx.font = '16px Arial';
+                ctx.fillStyle = currentSettings.isDarkMode ? '#FFFFFF' : '#000000';
+                ctx.fillText(currentSettings.text, canvas.width / 2, frameSize + (padding * 2) + textHeight);
+                
+                // If there's a logo, add it
+                if (currentSettings.logo) {
+                    const logoSize = qrSize * 0.2;
+                    const logoX = qrX + (qrSize - logoSize) / 2;
+                    const logoY = qrY + (qrSize - logoSize) / 2;
+                    ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
+                }
+                
+                resolve(canvas);
+            };
+            
+            tempImage.onerror = reject;
+            tempImage.src = qrImage.src;
+        });
     }
 
-    // Update the download handler to use the new canvas function
+    // Helper function for downloading canvas
+    function downloadCanvas(canvas) {
+        const link = document.createElement('a');
+        link.download = 'qr-code.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }
+
+    // Update the download handler
     downloadOptions.forEach(option => {
-        option.addEventListener('click', function() {
+        option.addEventListener('click', async function() {
             const format = this.dataset.format;
             const activePreview = currentSettings.isDarkMode ? previewDark : previewLight;
             const qrImage = activePreview.querySelector('img');
             
             if (format === 'png') {
-                const canvas = createDownloadCanvas(qrImage, format);
-                downloadCanvas(canvas);
+                try {
+                    const canvas = await createDownloadCanvas(qrImage, format);
+                    downloadCanvas(canvas);
+                    downloadModal.style.display = 'none';
+                } catch (error) {
+                    console.error('Error generating QR code:', error);
+                }
             } else {
                 // For SVG, create equivalent SVG structure
                 const svgNS = "http://www.w3.org/2000/svg";
@@ -364,14 +386,6 @@ document.addEventListener('DOMContentLoaded', function() {
             downloadModal.style.display = 'none';
         });
     });
-
-    // Helper function for downloading canvas
-    function downloadCanvas(canvas) {
-        const link = document.createElement('a');
-        link.download = 'qr-code.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-    }
 
     // Initial QR code generation
     updateQRCodes();
