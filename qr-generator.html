@@ -42,88 +42,103 @@
           </header>
           <div class="content">
             <div class="qr-generator">
-              <div class="qr-form">
-                <div class="url-input">
-                  <label for="url">Enter URL</label>
-                  <input type="url" id="url" name="url" placeholder="https://example.com" required />
-                  <span class="validation-message"></span>
+              <div class="url-input">
+                <label for="url">Enter URL</label>
+                <input type="url" id="url" name="url" placeholder="https://example.com" required />
+                <span class="validation-message"></span>
+              </div>
+
+              <div class="qr-main-content">
+                <div class="qr-preview-section">
+                  <div class="qr-preview">
+                    <h3>Preview</h3>
+                    <div class="preview-container">
+                      <div class="preview-light active"></div>
+                      <div class="preview-dark"></div>
+                      <button id="switch-bg" class="button small">Switch Background</button>
+                    </div>
+                    <div class="preview-controls">
+                      <button id="download-btn" class="button special">Download QR Code</button>
+                    </div>
+                  </div>
                 </div>
 
-                <div class="style-options">
-                  <h3>Style Options</h3>
-                  
-                  <div class="option-group">
-                    <label for="size">Size</label>
-                    <div class="size-control">
-                      <input type="range" id="size" name="size" min="128" max="512" value="256" />
-                      <span class="size-value">256 x 256</span>
-                    </div>
-                  </div>
-
-                  <div class="option-group">
-                    <label>Colors</label>
-                    <div class="color-pickers">
-                      <div class="color-picker-wrapper">
-                        <label>Foreground</label>
-                        <div id="foreground-picker"></div>
-                      </div>
-                      <div class="color-picker-wrapper">
-                        <label>Background</label>
-                        <div id="background-picker"></div>
+                <div class="qr-style-section">
+                  <div class="style-options">
+                    <h3>Style Options</h3>
+                    
+                    <div class="option-group">
+                      <label for="size">Size</label>
+                      <div class="size-control">
+                        <input type="range" id="size" name="size" min="128" max="512" value="256" />
+                        <span class="size-value">256 x 256</span>
                       </div>
                     </div>
-                  </div>
 
-                  <div class="option-group">
-                    <label for="corner-style">Corner Style</label>
-                    <select id="corner-style" name="corner-style">
-                      <option value="sharp">Sharp</option>
-                      <option value="rounded">Rounded</option>
-                    </select>
-                  </div>
-
-                  <div class="option-group">
-                    <label for="error-correction">Error Correction</label>
-                    <select id="error-correction" name="error-correction">
-                      <option value="L">Low (7%)</option>
-                      <option value="M" selected>Medium (15%)</option>
-                      <option value="Q">Quartile (25%)</option>
-                      <option value="H">High (30%)</option>
-                    </select>
-                    <div class="tooltip">
-                      Higher correction levels allow for more damage to the QR code while remaining scannable
+                    <div class="option-group">
+                      <label>Colors</label>
+                      <div class="color-pickers">
+                        <div class="color-picker-wrapper">
+                          <label>Foreground</label>
+                          <div id="foreground-picker"></div>
+                        </div>
+                        <div class="color-picker-wrapper">
+                          <label>Background</label>
+                          <div id="background-picker"></div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
 
-                  <div class="option-group">
-                    <label for="logo">Center Logo</label>
-                    <input type="file" id="logo" name="logo" accept="image/*" />
-                    <div class="tooltip">
-                      Recommended: small, square image with transparent background
+                    <div class="option-group">
+                      <label for="corner-style">Corner Style</label>
+                      <select id="corner-style" name="corner-style">
+                        <option value="sharp">Sharp</option>
+                        <option value="rounded">Rounded</option>
+                      </select>
+                    </div>
+
+                    <div class="option-group">
+                      <label for="error-correction">Error Correction</label>
+                      <select id="error-correction" name="error-correction">
+                        <option value="L">Low (7%)</option>
+                        <option value="M" selected>Medium (15%)</option>
+                        <option value="Q">Quartile (25%)</option>
+                        <option value="H">High (30%)</option>
+                      </select>
+                      <div class="tooltip">
+                        Higher correction levels allow for more damage to the QR code while remaining scannable
+                      </div>
+                    </div>
+
+                    <div class="option-group">
+                      <label for="logo">Center Logo</label>
+                      <input type="file" id="logo" name="logo" accept="image/*" />
+                      <div class="tooltip">
+                        Recommended: small, square image with transparent background
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
 
-              <div class="qr-preview">
-                <h3>Preview</h3>
-                <div class="preview-container">
-                  <div class="preview-light active"></div>
-                  <div class="preview-dark"></div>
-                  <button id="switch-bg" class="button small">Switch Background</button>
+            <!-- Download Modal -->
+            <div id="download-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 999999; justify-content: center; align-items: center;">
+                <div style="background: #2b2b2b; padding: 2em; border-radius: 4px; max-width: 500px; width: 90%; text-align: center;">
+                    <h2 style="margin-bottom: 0.5em;">DOWNLOAD QR CODE</h2>
+                    <p style="color: #888; margin-bottom: 2em;">Choose your preferred format:</p>
+                    <div style="display: flex; gap: 1em; margin: 2em 0; justify-content: center;">
+                        <button class="button special download-option" data-format="png" style="flex: 1; max-width: 200px; height: auto; padding: 1.5em 1em; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+                            <span style="font-size: 1.2em; margin-bottom: 0.5em;">PNG</span>
+                            <span style="font-size: 0.8em; opacity: 0.8; display: block;">BEST FOR GENERAL USE</span>
+                        </button>
+                        <button class="button special download-option" data-format="svg" style="flex: 1; max-width: 200px; height: auto; padding: 1.5em 1em; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+                            <span style="font-size: 1.2em; margin-bottom: 0.5em;">SVG</span>
+                            <span style="font-size: 0.8em; opacity: 0.8; display: block;">BEST FOR SCALING & EDITING</span>
+                        </button>
+                    </div>
+                    <button class="button small modal-close" style="margin-top: 1em;">Cancel</button>
                 </div>
-                <div class="preview-controls">
-                  <button id="download-btn" class="button special">Download QR Code</button>
-                  <div class="format-options">
-                    <label>
-                      <input type="radio" name="format" value="png" checked> PNG
-                    </label>
-                    <label>
-                      <input type="radio" name="format" value="svg"> SVG
-                    </label>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </article>
