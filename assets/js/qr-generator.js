@@ -1,9 +1,31 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Style the select elements
+    const selectElements = document.querySelectorAll('select');
+    selectElements.forEach(select => {
+        select.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+        select.style.color = '#000';
+        select.style.padding = '8px';
+        select.style.borderRadius = '4px';
+        select.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+        select.style.width = '100%';
+        select.style.marginTop = '5px';
+        select.style.cursor = 'pointer';
+    });
+
+    // Add hover effect
+    selectElements.forEach(select => {
+        select.addEventListener('mouseover', function() {
+            this.style.backgroundColor = 'rgba(255, 255, 255, 1)';
+        });
+        select.addEventListener('mouseout', function() {
+            this.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+        });
+    });
+
     // Get DOM elements
     const urlInput = document.getElementById('url');
     const sizeInput = document.getElementById('size');
     const sizeValue = document.querySelector('.size-value');
-    const cornerStyle = document.getElementById('corner-style');
     const errorCorrection = document.getElementById('error-correction');
     const logoInput = document.getElementById('logo');
     const downloadBtn = document.getElementById('download-btn');
@@ -15,8 +37,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const modalClose = document.querySelector('.modal-close');
 
     // Update size input default value
-    sizeInput.value = 140;
-    sizeValue.textContent = '140 x 140';
+    sizeInput.value = 256;
+    sizeValue.textContent = '256 x 256';
 
     // Initialize color pickers
     const foregroundPicker = Pickr.create({
@@ -56,14 +78,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // State object to track current settings
     let currentSettings = {
         text: "https://throwingeights.com.au",
-        width: 140,
-        height: 140,
+        width: 256,
+        height: 256,
         colorDark: "#000000",
         colorLight: "#FFFFFF",
         correctLevel: QRCode.CorrectLevel.M,
         logo: null,
-        isDarkMode: false // track which background is active
+        isDarkMode: false
     };
+
+    // Add this debug function at the top level
+/*     function debugLog(message, data = null) {
+        console.log(`[QR Generator] ${message}`, data || '');
+    } */
 
     // Clear existing content
     previewLight.innerHTML = '';
@@ -71,35 +98,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to update QR codes
     function updateQRCodes() {
+        //debugLog('Updating QR codes with settings:', currentSettings);
+        
+        // Clear existing QR codes
         previewLight.innerHTML = '';
         previewDark.innerHTML = '';
 
-        // Create light version
-        new QRCode(previewLight, {
+        // Create base QR code options
+        const qrOptions = {
             text: currentSettings.text,
             width: currentSettings.width,
             height: currentSettings.height,
             colorDark: currentSettings.colorDark,
             colorLight: currentSettings.colorLight,
             correctLevel: currentSettings.correctLevel
-        });
+        };
 
-        // Create dark version
+        // Generate light version
+        new QRCode(previewLight, qrOptions);
+        
+        // Generate dark version
         new QRCode(previewDark, {
-            text: currentSettings.text,
-            width: currentSettings.width,
-            height: currentSettings.height,
-            colorDark: currentSettings.colorLight, // Swapped colors
-            colorLight: currentSettings.colorDark,
-            correctLevel: currentSettings.correctLevel
+            ...qrOptions,
+            colorDark: currentSettings.colorLight,
+            colorLight: currentSettings.colorDark
         });
 
-        // Add logo if present
+        // Handle logo if present
         if (currentSettings.logo) {
+            //debugLog('Adding logo to QR codes');
             const containers = [previewLight, previewDark];
             containers.forEach(container => {
-                const qrImage = container.querySelector('img');
-                const logoSize = currentSettings.width * 0.2; // Logo size 20% of QR code
+                const logoSize = currentSettings.width * 0.2;
                 const logo = document.createElement('img');
                 logo.src = currentSettings.logo;
                 logo.style.position = 'absolute';
@@ -264,15 +294,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 ctx.fillStyle = currentSettings.isDarkMode ? '#FFFFFF' : '#000000';
                 ctx.fillText(currentSettings.text, canvas.width / 2, frameSize + (padding * 2) + textHeight);
                 
-                // If there's a logo, add it
+                // If there's a logo, add it after QR code is drawn
                 if (currentSettings.logo) {
-                    const logoSize = qrSize * 0.2;
-                    const logoX = qrX + (qrSize - logoSize) / 2;
-                    const logoY = qrY + (qrSize - logoSize) / 2;
-                    ctx.drawImage(logo, logoX, logoY, logoSize, logoSize);
+                    const logoImg = new Image();
+                    logoImg.onload = () => {
+                        const logoSize = qrSize * 0.2;
+                        const logoX = qrX + (qrSize - logoSize) / 2;
+                        const logoY = qrY + (qrSize - logoSize) / 2;
+                        ctx.drawImage(logoImg, logoX, logoY, logoSize, logoSize);
+                        resolve(canvas);
+                    };
+                    logoImg.onerror = reject;
+                    logoImg.src = currentSettings.logo;
+                } else {
+                    resolve(canvas);
                 }
-                
-                resolve(canvas);
             };
             
             tempImage.onerror = reject;
@@ -372,6 +408,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 urlText.setAttribute("fill", currentSettings.isDarkMode ? "#FFFFFF" : "#000000");
                 urlText.textContent = currentSettings.text;
                 svg.appendChild(urlText);
+                
+                // Add logo if present
+                if (currentSettings.logo) {
+                    const logoImage = document.createElementNS(svgNS, "image");
+                    const logoSize = qrSize * 0.2;
+                    const logoX = padding + 20 + (qrSize - logoSize) / 2;
+                    const logoY = padding + textHeight + 20 + (qrSize - logoSize) / 2;
+                    
+                    logoImage.setAttribute("x", logoX.toString());
+                    logoImage.setAttribute("y", logoY.toString());
+                    logoImage.setAttribute("width", logoSize.toString());
+                    logoImage.setAttribute("height", logoSize.toString());
+                    logoImage.setAttribute("href", currentSettings.logo);
+                    svg.appendChild(logoImage);
+                }
                 
                 // Download SVG
                 const svgData = new XMLSerializer().serializeToString(svg);
