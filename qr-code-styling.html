@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<!-- https://github.com/kozakdenys/qr-code-styling 
+    created by Manu at 16 Hours 27 Dec 2024
+    testing qr-code-styling basic generation
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>QR Code Styling Generator by Manu</title>
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/qr-code-styling@1.5.0/lib/qr-code-styling.js"
+    ></script>
+    <!-- Add color picker library -->
+    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        background: #f5f5f5;
+      }
+      .container {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .input-group {
+        margin-bottom: 0.5rem;
+      }
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #555;
+        font-weight: bold;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      select {
+        background-color: white;
+      }
+      #canvas {
+        display: flex;
+        justify-content: center;
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+      }
+      .color-group {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      .color-picker-wrapper {
+        flex: 1;
+      }
+      .color-picker-label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: #555;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>QR Code Generator by Manu</h1>
+
+      <div id="canvas"></div>
+
+      <div class="input-group">
+        <label for="url">Enter URL:</label>
+        <input
+          type="url"
+          id="url"
+          placeholder="https://throwingeights.com.au"
+          value="https://www.throwingeights.com.au/"
+        />
+      </div>
+
+      <div class="input-group">
+        <label for="cornerStyle">Corner Square Style:</label>
+        <select id="cornerStyle">
+          <option value="square">Square</option>
+          <option value="dot">Dot</option>
+          <option value="extra-rounded" selected>Extra Rounded</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label for="dotStyle">Dots Style:</label>
+        <select id="dotStyle">
+          <option value="square">Square</option>
+          <option value="dots">Dots</option>
+          <option value="rounded" selected>Rounded</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label for="typeNumber">Version Number:</label>
+        <select id="typeNumber">
+          <option value="3">Version 3</option>
+          <option value="4" selected>Version 4</option>
+          <option value="5">Version 5</option>
+          <option value="6">Version 6</option>
+          <option value="7">Version 7</option>
+          <option value="8">Version 8</option>
+          <option value="9">Version 9</option>
+          <option value="10">Version 10</option>
+          <option value="15">Version 15</option>
+          <option value="20">Version 20</option>
+          <option value="25">Version 25</option>
+          <option value="30">Version 30</option>
+          <option value="35">Version 35</option>
+          <option value="40">Version 40</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label for="errorCorrection">Error Correction:</label>
+        <select id="errorCorrection">
+          <option value="L">Low (7%)</option>
+          <option value="M" selected>Medium (15%)</option>
+          <!-- <option value="Q">Quartile (25%)</option> -->
+          <option value="H">High (30%)</option>
+        </select>
+      </div>
+
+      <div class="color-group">
+        <div class="color-picker-wrapper">
+          <label class="color-picker-label">Dots Color</label>
+          <div id="dots-color-picker"></div>
+        </div>
+        <div class="color-picker-wrapper">
+          <label class="color-picker-label">Corner Squares Color</label>
+          <div id="corner-color-picker"></div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      // Initialize color pickers
+      const dotsColorPicker = Pickr.create({
+        el: '#dots-color-picker',
+        theme: 'classic',
+        default: '#4267b2',
+        components: {
+          preview: true,
+          opacity: true,
+          hue: true,
+          interaction: {
+            hex: true,
+            rgba: true,
+            input: true,
+            save: true
+          }
+        }
+      });
+
+      const cornerColorPicker = Pickr.create({
+        el: '#corner-color-picker',
+        theme: 'classic',
+        default: '#000000',
+        components: {
+          preview: true,
+          opacity: true,
+          hue: true,
+          interaction: {
+            hex: true,
+            rgba: true,
+            input: true,
+            save: true
+          }
+        }
+      });
+
+      let qrCode;
+      let dotsColor = '#4267b2';
+      let cornerColor = '#000000';
+
+      function generateQR() {
+        const url = document.getElementById("url").value;
+        const cornerStyle = document.getElementById("cornerStyle").value;
+        const dotStyle = document.getElementById("dotStyle").value;
+        const typeNumber = parseInt(document.getElementById("typeNumber").value);
+        const errorCorrection = document.getElementById("errorCorrection").value;
+
+        // Clear previous QR code
+        document.getElementById("canvas").innerHTML = "";
+
+        qrCode = new QRCodeStyling({
+          width: 300,
+          height: 300,
+          type: "svg",
+          data: url,
+          image: "/images/logo.png", // adds an image in the centre of the qr code
+          dotsOptions: {
+            color: dotsColor,
+            type: dotStyle, // "square", "dots", or "rounded"
+          },
+          cornersSquareOptions: {
+            color: cornerColor,
+            type: cornerStyle, // "square", "dot", "extra-rounded"
+          },
+          backgroundOptions: {
+            color: "#ffffff",
+          },
+          imageOptions: {
+            crossOrigin: "anonymous", //crossOrigin: "anonymous" allows the image to be loaded from a different origin
+            margin: 2, //margin: 2, adds a margin around the image
+            hideBackgroundDots: true, //hideBackgroundDots: true, hides the background dots
+            size: 10, //size: 10, sets the size of the image
+          },
+          qrOptions: {
+            errorCorrectionLevel: errorCorrection, // L, M, Q H
+            typeNumber: typeNumber, // version number from 3 to 40 higher number versions are more complex and slower to generate
+          }
+        });
+
+        qrCode.append(document.getElementById("canvas")); //adds the qr code to the canvas
+        //qrCode.download({ name: "qr", extension: "svg" }); //automatically downloads the qr code
+      }
+
+      // Event listeners
+      document.getElementById("url").addEventListener("input", generateQR); //generates the qr code when the url is input
+      document.getElementById("cornerStyle").addEventListener("change", generateQR); //generates the qr code when the corner style is changed
+      document.getElementById("dotStyle").addEventListener("change", generateQR); //generates the qr code when the dot style is changed
+      document.getElementById("typeNumber").addEventListener("change", generateQR); //generates the qr code when the version number is changed
+      document.getElementById("errorCorrection").addEventListener("change", generateQR); //generates the qr code when the error correction is changed
+
+      // Color picker event listeners
+      dotsColorPicker.on('save', (color) => {
+        dotsColor = color.toHEXA().toString();
+        dotsColorPicker.hide();
+        generateQR();
+      });
+
+      cornerColorPicker.on('save', (color) => {
+        cornerColor = color.toHEXA().toString();
+        cornerColorPicker.hide();
+        generateQR();
+      });
+
+      // Generate initial QR code
+      generateQR();
+    </script>
+  </body>
+</html>

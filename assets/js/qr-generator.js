@@ -1,3 +1,8 @@
+// QR Code Generator
+// This script generates a QR code based on the user's input and allows them to download it in PNG and SVG formats.
+// It also allows the user to customize the QR code's appearance, including the background and foreground colors, the error correction level, and the logo.
+// The QR code is generated using the QRCodeStyling library.
+
 document.addEventListener('DOMContentLoaded', function() {
     // Style the select elements
     const selectElements = document.querySelectorAll('select');
@@ -84,7 +89,13 @@ document.addEventListener('DOMContentLoaded', function() {
         colorLight: "#FFFFFF",
         correctLevel: QRCode.CorrectLevel.M,
         logo: null,
-        isDarkMode: false
+        isDarkMode: false,
+        dotsOptions: {
+            type: 'rounded' // "rounded", "square", "dots"
+        },
+        cornersSquareOptions: {
+            type: 'extra-rounded', // corners of the 3 locational squares
+        }
     };
 
     // Add this debug function at the top level
@@ -111,7 +122,13 @@ document.addEventListener('DOMContentLoaded', function() {
             height: currentSettings.height,
             colorDark: currentSettings.colorDark,
             colorLight: currentSettings.colorLight,
-            correctLevel: currentSettings.correctLevel
+            correctLevel: currentSettings.correctLevel,
+            dotsOptions: {
+                type: 'rounded' // "rounded", "square", "dots"
+            },
+            cornersSquareOptions: {
+                type: 'extra-rounded', // corners of the 3 locational squares
+            }
         };
 
         // Generate light version
@@ -443,5 +460,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize UI
     previewLight.classList.add('active'); // Start with light mode
-    switchBgBtn.textContent = 'Switch to Dark Background';
+    switchBgBtn.textContent = 'Dark Background';
 }); 

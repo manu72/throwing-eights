@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "qr-code-styling": "^1.8.4",
+    "qrious": "^4.0.2"
+  }
+}
