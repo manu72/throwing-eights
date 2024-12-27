@@ -35,6 +35,7 @@ throwing-eights/
 - HTML5
 - CSS3
 - Font Awesome Icons
+- QRCode.js by [@davidshimjs](https://github.com/davidshimjs/qrcodejs) - QR code generation
 - Modern CSS Features:
   - Flexbox
   - Grid
