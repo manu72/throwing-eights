@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
         currentSettings.isDarkMode = !currentSettings.isDarkMode;
         previewLight.classList.toggle('active');
         previewDark.classList.toggle('active');
-        switchBgBtn.textContent = currentSettings.isDarkMode ? 'Switch to Light Background' : 'Switch to Dark Background';
+        switchBgBtn.textContent = currentSettings.isDarkMode ? 'Light Background' : 'Dark Background';
     }
 
     // Add switch button listener
