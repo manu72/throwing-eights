@@ -1,7 +1,28 @@
 .qr-generator {
   display: flex;
+  flex-direction: column;
   gap: 2em;
   margin-top: 2em;
+}
+
+.url-input {
+  width: 100%;
+  margin-bottom: 2em;
+}
+
+.qr-main-content {
+  display: flex;
+  gap: 2em;
+}
+
+.qr-preview-section {
+  flex: 1;
+  min-width: 300px;
+}
+
+.qr-style-section {
+  flex: 1;
+  min-width: 300px;
 }
 
 .qr-form {
@@ -12,10 +33,6 @@
 .qr-preview {
   flex: 1;
   min-width: 300px;
-}
-
-.url-input {
-  margin-bottom: 2em;
 }
 
 .url-input input {
@@ -112,9 +129,56 @@
   margin-top: 1em;
 }
 
+.format-buttons {
+  display: flex;
+  gap: 0.5em;
+  justify-content: center;
+}
+
+.format-btn {
+  opacity: 0.7;
+  transition: all 0.2s ease;
+}
+
+.format-btn.active {
+  opacity: 1;
+  background-color: #f64747 !important;
+}
+
 .format-options {
   display: flex;
   gap: 1em;
+  margin-top: 0.5em;
+  justify-content: center;
+}
+
+.format-options label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em 1em;
+  background: rgba(255, 255, 255, 0.075);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.format-options label:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.format-options input[type="radio"] {
+  margin: 0;
+}
+
+.format-options input[type="radio"]:checked + span {
+  color: #f64747;
+}
+
+.format-options label.active {
+  background: rgba(246, 71, 71, 0.2);
+  border-color: #f64747;
 }
 
 .tooltip {
@@ -125,11 +189,19 @@
 
 /* Mobile Responsive */
 @media screen and (max-width: 980px) {
-  .qr-generator {
+  .qr-main-content {
     flex-direction: column;
   }
 
-  .preview-container {
+  .qr-preview-section {
+    order: 1; /* Show preview first */
+  }
+
+  .qr-style-section {
+    order: 2; /* Show style options second */
+  }
+
+  .qr-preview-section {
     flex-direction: column;
   }
 
@@ -162,4 +234,105 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 10000000; /* Very high z-index */
+    pointer-events: auto;
+}
+
+.modal.active {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    position: fixed !important; /* Force fixed position */
+}
+
+.modal-content {
+    background: #2b2b2b;
+    padding: 2em;
+    border-radius: 4px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    position: relative;
+    z-index: 10000001; /* Higher than modal background */
+    margin: 2em;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Override any site-wide styles that might interfere */
+body.modal-open {
+    overflow: hidden;
+}
+
+#wrapper.modal-open {
+    pointer-events: none;
+}
+
+.download-options {
+    display: flex;
+    gap: 1em;
+    margin: 2em 0;
+    justify-content: center;
+}
+
+.download-option {
+    display: flex;
+    flex-direction: column;
+    padding: 1em;
+    flex: 1;
+    align-items: center;
+    transition: transform 0.2s;
+}
+
+.download-option:hover {
+    transform: translateY(-2px);
+}
+
+.format-name {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+.format-desc {
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+.modal-close {
+    margin-top: 1em;
+}
+
+@media screen and (max-width: 480px) {
+    .download-options {
+        flex-direction: column;
+    }
+}
+
+/* Add some animation */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal.active .modal-content {
+    animation: modalFadeIn 0.3s ease-out;
 } 
