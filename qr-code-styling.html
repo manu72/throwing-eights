@@ -74,7 +74,7 @@
         padding: 0.1rem;
         border: 1px solid #ddd;
         border-radius: 4px;
-        font-size: 1rem;
+        font-size: 0.9rem;
         color: #333;
         margin-bottom: 0.5rem;
       }
@@ -84,8 +84,8 @@
       #canvas {
         display: flex;
         justify-content: center;
-        margin-top: 1rem;
-        margin-bottom: 2rem;
+        margin-top: 0rem;
+        margin-bottom: 1rem;
       }
       .color-group {
         display: flex;
@@ -303,8 +303,8 @@
         document.getElementById("canvas").innerHTML = "";
 
         qrCode = new QRCodeStyling({
-          width: 300,
-          height: 300,
+          width: 256,
+          height: 256,
           type: "svg",
           data: url,
           image: "/images/logo.png", // adds an image in the centre of the qr code
