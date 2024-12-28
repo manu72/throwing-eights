@@ -86,6 +86,13 @@
         justify-content: center;
         margin-top: 0rem;
         margin-bottom: 1rem;
+        width: 100%;
+      }
+      #canvas svg {
+        max-width: 300px;
+        max-height: 300px;
+        width: 100% !important; /* Override inline styles */
+        height: auto !important; /* Override inline styles */
       }
       .color-group {
         display: flex;
@@ -302,9 +309,12 @@
         // Clear previous QR code
         document.getElementById("canvas").innerHTML = "";
 
+        const containerWidth = document.getElementById('canvas').clientWidth; // get the width of the container
+        const size = Math.min(300, containerWidth - 20); // set the size of the qr code to the width of the container minus 20px
+
         qrCode = new QRCodeStyling({
-          width: 256,
-          height: 256,
+          width: size,
+          height: size,
           type: "svg",
           data: url,
           image: "/images/logo.png", // adds an image in the centre of the qr code
@@ -320,10 +330,10 @@
             color: "#ffffff",
           },
           imageOptions: {
-            crossOrigin: "anonymous", //crossOrigin: "anonymous" allows the image to be loaded from a different origin
-            margin: 2, //margin: 2, adds a margin around the image
-            hideBackgroundDots: true, //hideBackgroundDots: true, hides the background dots
-            size: 10, //size: 10, sets the size of the image
+            crossOrigin: "anonymous", //allows the image to be loaded from a different origin
+            margin: 2, //adds a margin around the image
+            hideBackgroundDots: true, //hides the background dots
+            size: 10, //sets the size of the image
           },
           qrOptions: {
             errorCorrectionLevel: errorCorrection, // L, M, Q H
@@ -365,6 +375,14 @@
 
       // Generate initial QR code
       generateQR();
+      //window.addEventListener('resize', generateQR); // generate the qr code when the window is resized
+      window.addEventListener('resize', () => {
+        const containerWidth = document.getElementById('canvas').clientWidth;
+        const currentSize = Math.min(300, containerWidth - 20);
+        if (qrCode && qrCode._options.width !== currentSize) {
+            generateQR();
+        }
+      });
     </script>
   </body>
 </html>
