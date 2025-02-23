@@ -130,12 +130,12 @@
           if (isMobile) {
             if (screenWidth > screenHeight) {
               // Landscape
-              newWidth = Math.min(screenWidth * 0.8, 800);
-              newHeight = Math.min(screenHeight * 0.7, 450);
+              newWidth = Math.min(screenWidth * 0.9, 800); // 90% of screen width capped at 800px
+              newHeight = Math.min(screenHeight * 0.9, 600); // 90% of screen height capped at 500px
             } else {
               // Portrait
-              newWidth = Math.min(screenWidth * 0.9, 400);
-              newHeight = Math.min(screenHeight * 0.6, 600);
+              newWidth = Math.min(screenWidth * 0.9, 600);
+              newHeight = Math.min(screenHeight * 0.7, 600);
             }
           } else {
             // Desktop
