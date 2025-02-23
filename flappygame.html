@@ -3,11 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Flappy Game</title>
+    <title>Flappy Game | Throwing Eights</title>
+    <link rel="stylesheet" href="assets/css/main.css" />
     <style>
       body {
-        text-align: center;
-        background: #70c5ce;
         margin: 0;
       }
       canvas {
@@ -17,6 +16,9 @@
       }
       #game-container {
         position: relative;
+        width: 100%;
+        max-width: 700px;
+        margin: 0 auto;
       }
       #start-btn {
         position: absolute;
@@ -25,17 +27,75 @@
         transform: translate(-50%, -50%);
         padding: 10px 20px;
         font-size: 20px;
-        background: #ffcc00;
+        background: #f64747;
+        color: #ffffff;
         border: none;
         cursor: pointer;
       }
+      #start-btn:hover {
+        background: #f75f5f;
+      }
+      .wrapper.bg-img {
+        background-attachment: fixed;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        min-height: 100vh;
+      }
+      article.box {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 0 auto;
+      }
     </style>
   </head>
-  <body>
-    <div id="game-container">
-      <canvas id="flappyCanvas"></canvas>
-      <button id="start-btn">Start game using space bar</button>
-    </div>
+  <body class="subpage">
+    <!-- Header -->
+    <header id="header" class="alt">
+      <div class="logo">
+        <a href="/">Throwing Eights <span>by 16 Hours</span></a>
+      </div>
+      <a href="#menu"><span>Menu</span></a>
+    </header>
+
+    <!-- Nav -->
+    <nav id="menu">
+      <ul class="links">
+        <li><a href="/">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="flappygame.html">Flappy Game</a></li>
+        <li><a href="qr-generator.html">QR Generator</a></li>
+        <li><a href="qr-code-styling.html">QR Style by Manu</a></li>
+        <li><a href="#footer">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Content -->
+    <section id="post" class="wrapper bg-img" data-bg="banner2.jpg">
+      <div class="inner">
+        <article class="box">
+          <header>
+            <h2>Flappy Game</h2>
+            <p>Test your skills!</p>
+          </header>
+          <div id="game-container">
+            <canvas id="flappyCanvas"></canvas>
+            <button id="start-btn">Use the space bar to free Pam</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Scripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/skel.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <script src="assets/js/main.js"></script>
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
