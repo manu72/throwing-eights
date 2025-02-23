@@ -33,6 +33,9 @@
         color: #ffffff;
         border: none;
         cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
       #start-btn:hover {
         background: #f75f5f;
@@ -81,12 +84,12 @@
     <section id="post" class="wrapper bg-img" data-bg="banner2.jpg">
       <div class="inner">
         <header class="align-center">
-          <h2>Manu and D-Rock present Pam's Flappy Game</h2>
-          <p>Press the space bar or tap the screen to free the bird!</p>
+          <h2>FLY HIGH D-ROCK</h2>
+          <p>Use the space bar or tap the screen to free Pam!</p>
         </header>
         <div id="game-container">
           <canvas id="flappyCanvas"></canvas>
-          <button id="start-btn">Use the space bar to free Pam</button>
+          <button id="start-btn">Start Flapping</button>
         </div>
       </div>
     </section>
@@ -110,6 +113,48 @@
         let gamesPlayed =
           parseInt(localStorage.getItem("flappyGamesPlayed")) || 0;
 
+        // Device and screen detection
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+        function getCanvasSize() {
+          const screenWidth = window.innerWidth;
+          const screenHeight = window.innerHeight;
+          let newWidth, newHeight;
+
+          if (isMobile) {
+            if (screenWidth > screenHeight) {
+              // Landscape
+              newWidth = Math.min(screenWidth * 0.8, 800);
+              newHeight = Math.min(screenHeight * 0.7, 450);
+            } else {
+              // Portrait
+              newWidth = Math.min(screenWidth * 0.9, 400);
+              newHeight = Math.min(screenHeight * 0.6, 600);
+            }
+          } else {
+            // Desktop
+            newWidth = 600;
+            newHeight = 600;
+          }
+          return { width: newWidth, height: newHeight };
+        }
+
+        function updateCanvasSize() {
+          const { width, height } = getCanvasSize();
+          canvas.width = width;
+          canvas.height = height;
+          WIDTH = width;
+          HEIGHT = height;
+        }
+
+        // Initial canvas size setup
+        updateCanvasSize();
+
+        // Listen for orientation changes
+        window.addEventListener("orientationchange", () => {
+          setTimeout(updateCanvasSize, 100); // Delay to ensure new dimensions
+        });
+
         // Add bird image loading
         const birdImage = new Image();
         birdImage.src = "pam.png";
@@ -118,11 +163,6 @@
         birdImage.onload = () => {
           useImageForBird = true;
         };
-
-        const WIDTH = 600,
-          HEIGHT = 600;
-        canvas.width = WIDTH;
-        canvas.height = HEIGHT;
 
         let bird, pipes, gravity, jumpStrength, pipeSpeed, score, gameRunning;
 
