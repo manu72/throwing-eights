@@ -27,8 +27,8 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        padding: 10px 20px;
-        font-size: 20px;
+        padding: 10px 10px;
+        font-size: 18px;
         background: #f64747;
         color: #ffffff;
         border: none;
@@ -85,7 +85,7 @@
       <div class="inner">
         <header class="align-center">
           <h2>Flappy Bird Down Under</h2>
-          <p>Use the space bar or tap to flap</p>
+          <p>Space bar or tap to flap</p>
         </header>
         <div id="game-container">
           <canvas id="flappyCanvas"></canvas>
@@ -125,39 +125,19 @@
         );
 
         function getCanvasSize() {
-          const screenWidth = window.innerWidth || 600;
-          const screenHeight = window.innerHeight || 600;
           let newWidth, newHeight;
 
-          if (isMobilePhone) {
-            if (screenWidth > screenHeight) {
-              // Landscape - true fullscreen for phones
-              document.body.style.overflow = "hidden";
-              document.querySelector("header").style.display = "none";
-              document.querySelector("nav").style.display = "none";
-              document.querySelector(".wrapper").style.padding = "0";
-              document.querySelector(".inner").style.padding = "0";
-              document.querySelector("header.align-center").style.display =
-                "none";
-              newWidth = screenWidth;
-              newHeight = screenHeight;
-            } else {
-              // Portrait - restore normal view
-              document.body.style.overflow = "";
-              document.querySelector("header").style.display = "";
-              document.querySelector("nav").style.display = "";
-              document.querySelector(".wrapper").style.padding = "";
-              document.querySelector(".inner").style.padding = "";
-              document.querySelector("header.align-center").style.display = "";
-              newWidth = Math.min(screenWidth * 0.9, 600);
-              newHeight = Math.min(screenHeight * 0.7, 600);
-            }
+          // Fixed height always 600 important for gameplay due to pipe gap
+          newHeight = 600;
+
+          // Only adjust width for mobile phones in portrait
+          if (isMobilePhone && window.innerHeight > window.innerWidth) {
+            newWidth = 400; // Narrower width for portrait phones
           } else {
-            // Desktop
-            newWidth = 600;
-            newHeight = 600;
+            newWidth = 600; // Default square canvas
           }
-          return { width: newWidth, height: newHeight };
+
+          return { width: newWidth || 600, height: newHeight || 600 };
         }
 
         function updateCanvasSize() {
@@ -204,11 +184,11 @@
         let currentPipeSpacing; // Track current horizontal spacing
 
         // Add after bird image loading
-        const flapSound = new Audio("swoosh.mp3");
+        //const flapSound = new Audio("swoosh.mp3");
         const crashSound = new Audio("squawk.mp3");
 
         // Preload sounds
-        flapSound.load();
+        //flapSound.load();
         crashSound.load();
 
         function resetGame() {
@@ -251,6 +231,7 @@
 
         function startGame() {
           startBtn.style.display = "none";
+          crashSound.currentTime = 0; // reset sound to start
           resetGame();
           gameLoop();
         }
@@ -342,14 +323,14 @@
         function checkCollision() {
           const birdHitbox = useImageForBird
             ? {
-                // Make hitbox 80% of the visual size for more forgiving collisions
-                top: bird.y - bird.height * 0.4, // Lower values (e.g., 0.3) = more forgiving collisions
-                bottom: bird.y + bird.height * 0.4,
+                // Make image hitbox smaller for more forgiving collisions
+                top: bird.y - bird.height * 0.3, // Lower values (e.g., 0.3) = more forgiving collisions
+                bottom: bird.y + bird.height * 0.3,
                 left: bird.x - bird.width * 0.4,
                 right: bird.x + bird.width * 0.4,
               }
             : {
-                // Make circle hitbox 80% of visual size
+                // Make fallback circle hitbox 80% of visual size
                 top: bird.y - bird.radius * 0.8,
                 bottom: bird.y + bird.radius * 0.8,
                 left: bird.x - bird.radius * 0.8,
@@ -372,9 +353,9 @@
           bird.y += bird.velocity;
 
           if (checkCollision()) {
-            gameRunning = false;
-            crashSound.currentTime = 0;
-            crashSound.play();
+            crashSound.play(); // play crash sound immediately
+            gameRunning = false; // then stop the game
+
             if (score > highScore) {
               highScore = score;
               localStorage.setItem("flappyHighScore", highScore);
@@ -398,8 +379,8 @@
         function jump() {
           if (gameRunning) {
             bird.velocity = jumpStrength;
-            flapSound.currentTime = 0; // Reset sound to start
-            flapSound.play();
+            //flapSound.currentTime = 0; // Reset sound to start
+            //flapSound.play();
           }
         }
 
