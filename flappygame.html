@@ -84,7 +84,7 @@
     <section id="post" class="wrapper bg-img" data-bg="banner2.jpg">
       <div class="inner">
         <header class="align-center">
-          <h2>FLY HIGH D-ROCK</h2>
+          <h2>Melbourne's own Flappy Bird</h2>
           <p>Use the space bar or tap the screen to free Pam!</p>
         </header>
         <div id="game-container">
@@ -109,16 +109,22 @@
         const startBtn = document.getElementById("start-btn");
 
         // Add localStorage management
-        let highScore = parseInt(localStorage.getItem("flappyHighScore")) || 0;
-        let gamesPlayed =
-          parseInt(localStorage.getItem("flappyGamesPlayed")) || 0;
+        let highScore = 0,
+          gamesPlayed = 0;
+        try {
+          highScore = parseInt(localStorage.getItem("flappyHighScore")) || 0;
+          gamesPlayed =
+            parseInt(localStorage.getItem("flappyGamesPlayed")) || 0;
+        } catch (e) {
+          console.warn("localStorage is not available:", e);
+        }
 
         // Device and screen detection
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
         function getCanvasSize() {
-          const screenWidth = window.innerWidth;
-          const screenHeight = window.innerHeight;
+          const screenWidth = window.innerWidth || 600; // fallback 600px
+          const screenHeight = window.innerHeight || 600; // fallback 600px
           let newWidth, newHeight;
 
           if (isMobile) {
@@ -141,10 +147,12 @@
 
         function updateCanvasSize() {
           const { width, height } = getCanvasSize();
-          canvas.width = width;
-          canvas.height = height;
-          WIDTH = width;
-          HEIGHT = height;
+          if (canvas) {
+            canvas.width = width;
+            canvas.height = height;
+            WIDTH = width;
+            HEIGHT = height;
+          }
         }
 
         // Initial canvas size setup
