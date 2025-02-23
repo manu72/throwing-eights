@@ -132,7 +132,7 @@
 
           // Only adjust width for mobile phones in portrait
           if (isMobilePhone && window.innerHeight > window.innerWidth) {
-            newWidth = 400; // Narrower width for portrait phones
+            newWidth = window.innerWidth * 0.9; // Narrower width for portrait phones
           } else {
             newWidth = 600; // Default square canvas
           }
