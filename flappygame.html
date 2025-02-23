@@ -268,18 +268,12 @@
 
         function drawScore() {
           ctx.fillStyle = "black";
-          ctx.font = "20px Arial";
-          // Draw current score on the left
+          ctx.font = "18px Arial";
+          // Draw all scores on the left side
           ctx.textAlign = "left";
-          ctx.fillText(`Score: ${score}`, 10, 30);
-
-          // Draw high score and games played on the right
-          ctx.textAlign = "right";
-          ctx.fillText(`High Score: ${highScore}`, WIDTH - 10, 30);
-          ctx.fillText(`Games: ${gamesPlayed}`, WIDTH - 10, 60);
-
-          // Reset text alignment to default
-          ctx.textAlign = "left";
+          ctx.fillText(`Games Played: ${gamesPlayed}`, 10, 20);
+          ctx.fillText(`High Score: ${highScore}`, 10, 40);
+          ctx.fillText(`Score: ${score}`, 10, 60);
         }
 
         function checkCollision() {
