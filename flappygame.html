@@ -50,6 +50,16 @@
         max-width: 800px;
         margin: 0 auto;
       }
+      /* Disable touch callout and user selection on the game canvas */
+      #flappyCanvas {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        touch-action: none;
+      }
     </style>
   </head>
   <body class="subpage">
@@ -117,7 +127,7 @@
           useImageForBird = true;
         };
 
-        const WIDTH = 700,
+        const WIDTH = 600,
           HEIGHT = 600;
         canvas.width = WIDTH;
         canvas.height = HEIGHT;
@@ -324,6 +334,20 @@
               startGame();
             }
           }
+        });
+
+        // Add touch controls
+        canvas.addEventListener("touchstart", (e) => {
+          e.preventDefault(); // Prevent scrolling when touching the canvas
+          if (gameRunning) {
+            bird.velocity = jumpStrength;
+          }
+        });
+
+        // Add touch control for starting the game
+        startBtn.addEventListener("touchstart", (e) => {
+          e.preventDefault();
+          startGame();
         });
 
         startBtn.addEventListener("click", startGame);
