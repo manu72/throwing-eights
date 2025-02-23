@@ -12,7 +12,9 @@
       canvas {
         display: block;
         margin: auto;
-        background: white;
+        background: linear-gradient(180deg, #87ceeb 0%, #e0f6ff 100%);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
       #game-container {
         position: relative;
@@ -41,14 +43,6 @@
         background-repeat: no-repeat;
         background-size: cover;
         min-height: 100vh;
-      }
-      article.box {
-        background: white;
-        padding: 2rem;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        max-width: 800px;
-        margin: 0 auto;
       }
       /* Disable touch callout and user selection on the game canvas */
       #flappyCanvas {
@@ -86,16 +80,14 @@
     <!-- Content -->
     <section id="post" class="wrapper bg-img" data-bg="banner2.jpg">
       <div class="inner">
-        <article class="box">
-          <header>
-            <h2>Flappy Game</h2>
-            <p>Test your skills!</p>
-          </header>
-          <div id="game-container">
-            <canvas id="flappyCanvas"></canvas>
-            <button id="start-btn">Use the space bar to free Pam</button>
-          </div>
-        </article>
+        <header class="align-center">
+          <h2>Manu and D-Rock present Pam's Flappy Game</h2>
+          <p>Press the space bar or tap the screen to free the bird!</p>
+        </header>
+        <div id="game-container">
+          <canvas id="flappyCanvas"></canvas>
+          <button id="start-btn">Use the space bar to free Pam</button>
+        </div>
       </div>
     </section>
 
@@ -147,6 +139,14 @@
 
         let currentPipeGap; // Track current gap size
         let currentPipeSpacing; // Track current horizontal spacing
+
+        // Add after bird image loading
+        const flapSound = new Audio("swoosh.mp3");
+        const crashSound = new Audio("squawk.mp3");
+
+        // Preload sounds
+        flapSound.load();
+        crashSound.load();
 
         function resetGame() {
           bird = {
@@ -221,7 +221,7 @@
         }
 
         function drawPipes() {
-          ctx.fillStyle = "green";
+          ctx.fillStyle = "green"; // ctx is the canvas context
           pipes.forEach((pipe) => {
             ctx.fillRect(pipe.x, 0, pipe.width, pipe.topHeight);
             ctx.fillRect(
@@ -267,7 +267,7 @@
         }
 
         function drawScore() {
-          ctx.fillStyle = "black";
+          ctx.fillStyle = "black"; // ctx is the canvas context
           ctx.font = "18px Arial";
           // Draw all scores on the left side
           ctx.textAlign = "left";
@@ -279,16 +279,18 @@
         function checkCollision() {
           const birdHitbox = useImageForBird
             ? {
-                top: bird.y - bird.height / 2,
-                bottom: bird.y + bird.height / 2,
-                left: bird.x - bird.width / 2,
-                right: bird.x + bird.width / 2,
+                // Make hitbox 80% of the visual size for more forgiving collisions
+                top: bird.y - bird.height * 0.4, // Lower values (e.g., 0.3) = more forgiving collisions
+                bottom: bird.y + bird.height * 0.4,
+                left: bird.x - bird.width * 0.4,
+                right: bird.x + bird.width * 0.4,
               }
             : {
-                top: bird.y - bird.radius,
-                bottom: bird.y + bird.radius,
-                left: bird.x - bird.radius,
-                right: bird.x + bird.radius,
+                // Make circle hitbox 80% of visual size
+                top: bird.y - bird.radius * 0.8,
+                bottom: bird.y + bird.radius * 0.8,
+                left: bird.x - bird.radius * 0.8,
+                right: bird.x + bird.radius * 0.8,
               };
 
           if (birdHitbox.bottom > HEIGHT || birdHitbox.top < 0) return true;
@@ -308,7 +310,8 @@
 
           if (checkCollision()) {
             gameRunning = false;
-            // Update high score if current score is higher
+            crashSound.currentTime = 0;
+            crashSound.play();
             if (score > highScore) {
               highScore = score;
               localStorage.setItem("flappyHighScore", highScore);
@@ -328,25 +331,33 @@
           if (gameRunning) requestAnimationFrame(gameLoop);
         }
 
+        // In the jump handler (both keyboard and touch)
+        function jump() {
+          if (gameRunning) {
+            bird.velocity = jumpStrength;
+            flapSound.currentTime = 0; // Reset sound to start
+            flapSound.play();
+          }
+        }
+
+        // Update event listeners to use jump function
         document.addEventListener("keydown", (e) => {
           if (e.code === "Space") {
             if (gameRunning) {
-              bird.velocity = jumpStrength;
+              jump();
             } else {
               startGame();
             }
           }
         });
 
-        // Add touch controls
         canvas.addEventListener("touchstart", (e) => {
-          e.preventDefault(); // Prevent scrolling when touching the canvas
+          e.preventDefault();
           if (gameRunning) {
-            bird.velocity = jumpStrength;
+            jump();
           }
         });
 
-        // Add touch control for starting the game
         startBtn.addEventListener("touchstart", (e) => {
           e.preventDefault();
           startGame();
