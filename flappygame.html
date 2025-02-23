@@ -137,7 +137,7 @@
             newWidth = 600; // Default square canvas
           }
 
-          return { width: newWidth, height: newHeight };
+          return { width: newWidth || 600, height: newHeight || 600 };
         }
 
         function updateCanvasSize() {
@@ -154,9 +154,9 @@
         updateCanvasSize();
 
         // Listen for orientation changes
-        // window.addEventListener("orientationchange", () => {
-        //   setTimeout(updateCanvasSize, 100); // Delay to ensure new dimensions
-        // });
+        window.addEventListener("orientationchange", () => {
+          setTimeout(updateCanvasSize, 100); // Delay to ensure new dimensions
+        });
 
         // Add bird image loading
         const birdImage = new Image();
@@ -231,6 +231,7 @@
 
         function startGame() {
           startBtn.style.display = "none";
+          crashSound.currentTime = 0; // reset sound to start
           resetGame();
           gameLoop();
         }
@@ -322,14 +323,14 @@
         function checkCollision() {
           const birdHitbox = useImageForBird
             ? {
-                // Make hitbox 80% of the visual size for more forgiving collisions
-                top: bird.y - bird.height * 0.4, // Lower values (e.g., 0.3) = more forgiving collisions
-                bottom: bird.y + bird.height * 0.4,
+                // Make image hitbox smaller for more forgiving collisions
+                top: bird.y - bird.height * 0.3, // Lower values (e.g., 0.3) = more forgiving collisions
+                bottom: bird.y + bird.height * 0.3,
                 left: bird.x - bird.width * 0.4,
                 right: bird.x + bird.width * 0.4,
               }
             : {
-                // Make circle hitbox 80% of visual size
+                // Make fallback circle hitbox 80% of visual size
                 top: bird.y - bird.radius * 0.8,
                 bottom: bird.y + bird.radius * 0.8,
                 left: bird.x - bird.radius * 0.8,
@@ -352,9 +353,8 @@
           bird.y += bird.velocity;
 
           if (checkCollision()) {
-            crashSound.play();
-            gameRunning = false;
-            crashSound.currentTime = 0;
+            crashSound.play(); // play crash sound immediately
+            gameRunning = false; // then stop the game
 
             if (score > highScore) {
               highScore = score;
