@@ -84,8 +84,8 @@
     <section id="post" class="wrapper bg-img" data-bg="banner2.jpg">
       <div class="inner">
         <header class="align-center">
-          <h2>Melbourne's own Flappy Bird</h2>
-          <p>Use the space bar or tap the screen to free Pam!</p>
+          <h2>Flappy Bird Down Under</h2>
+          <p>Use the space bar or tap to flap</p>
         </header>
         <div id="game-container">
           <canvas id="flappyCanvas"></canvas>
@@ -119,21 +119,23 @@
           console.warn("localStorage is not available:", e);
         }
 
-        // Device and screen detection
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        // Update device detection to be more specific
+        const isMobilePhone = /iPhone|Android.*Mobile/i.test(
+          navigator.userAgent
+        );
 
         function getCanvasSize() {
-          const screenWidth = window.innerWidth || 600; // fallback 600px
-          const screenHeight = window.innerHeight || 600; // fallback 600px
+          const screenWidth = window.innerWidth || 600;
+          const screenHeight = window.innerHeight || 600;
           let newWidth, newHeight;
 
-          if (isMobile) {
+          if (isMobilePhone) {
             if (screenWidth > screenHeight) {
-              // Landscape
-              newWidth = Math.min(screenWidth * 0.9, 800); // 90% of screen width capped at 800px
-              newHeight = Math.min(screenHeight * 0.9, 600); // 90% of screen height capped at 500px
+              // Landscape - full screen for phones only
+              newWidth = screenWidth;
+              newHeight = screenHeight;
             } else {
-              // Portrait
+              // Portrait - keep existing behavior
               newWidth = Math.min(screenWidth * 0.9, 600);
               newHeight = Math.min(screenHeight * 0.7, 600);
             }
