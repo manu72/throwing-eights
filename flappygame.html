@@ -131,11 +131,24 @@
 
           if (isMobilePhone) {
             if (screenWidth > screenHeight) {
-              // Landscape - full screen for phones only
+              // Landscape - true fullscreen for phones
+              document.body.style.overflow = "hidden";
+              document.querySelector("header").style.display = "none";
+              document.querySelector("nav").style.display = "none";
+              document.querySelector(".wrapper").style.padding = "0";
+              document.querySelector(".inner").style.padding = "0";
+              document.querySelector("header.align-center").style.display =
+                "none";
               newWidth = screenWidth;
               newHeight = screenHeight;
             } else {
-              // Portrait - keep existing behavior
+              // Portrait - restore normal view
+              document.body.style.overflow = "";
+              document.querySelector("header").style.display = "";
+              document.querySelector("nav").style.display = "";
+              document.querySelector(".wrapper").style.padding = "";
+              document.querySelector(".inner").style.padding = "";
+              document.querySelector("header.align-center").style.display = "";
               newWidth = Math.min(screenWidth * 0.9, 600);
               newHeight = Math.min(screenHeight * 0.7, 600);
             }
