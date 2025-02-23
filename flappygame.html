@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flappy Game</title>
+    <style>
+      body {
+        text-align: center;
+        background: #70c5ce;
+        margin: 0;
+      }
+      canvas {
+        display: block;
+        margin: auto;
+        background: white;
+      }
+      #game-container {
+        position: relative;
+      }
+      #start-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 10px 20px;
+        font-size: 20px;
+        background: #ffcc00;
+        border: none;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game-container">
+      <canvas id="flappyCanvas"></canvas>
+      <button id="start-btn">Start game using space bar</button>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const canvas = document.getElementById("flappyCanvas");
+        const ctx = canvas.getContext("2d");
+        const startBtn = document.getElementById("start-btn");
+
+        // Add localStorage management
+        let highScore = parseInt(localStorage.getItem("flappyHighScore")) || 0;
+        let gamesPlayed =
+          parseInt(localStorage.getItem("flappyGamesPlayed")) || 0;
+
+        // Add bird image loading
+        const birdImage = new Image();
+        birdImage.src = "pam.png";
+        let useImageForBird = false;
+
+        birdImage.onload = () => {
+          useImageForBird = true;
+        };
+
+        const WIDTH = 700,
+          HEIGHT = 600;
+        canvas.width = WIDTH;
+        canvas.height = HEIGHT;
+
+        let bird, pipes, gravity, jumpStrength, pipeSpeed, score, gameRunning;
+
+        // Add these new constants for pipe configuration
+        const INITIAL_PIPE_GAP = 250; // Initial gap between top and bottom pipes
+        const MIN_PIPE_GAP = 100; // Minimum gap allowed
+        const GAP_REDUCTION = 10; // How much to reduce gap by
+        const SCORE_INTERVAL = 10; // Points needed for gap reduction
+        const PIPE_SPACING = 300; // Horizontal distance between pipes
+        const PIPE_WIDTH = 50;
+        const MIN_PIPE_HEIGHT = 50; // Minimum height for top/bottom pipes
+
+        let currentPipeGap; // Track current gap size
+
+        function resetGame() {
+          bird = {
+            x: 50,
+            y: HEIGHT / 3,
+            radius: 15,
+            velocity: 0,
+            width: 30,
+            height: 30,
+          };
+          pipes = [];
+          gravity = 0.3;
+          jumpStrength = -7;
+          pipeSpeed = 3;
+          score = 0;
+          currentPipeGap = INITIAL_PIPE_GAP; // Reset pipe gap
+          gameRunning = true;
+          gamesPlayed++;
+          localStorage.setItem("flappyGamesPlayed", gamesPlayed);
+          // Add initial pipe
+          addPipe();
+        }
+
+        // Update addPipe function to use currentPipeGap
+        function addPipe() {
+          // Calculate random height but ensure minimum pipe heights
+          const maxTopHeight = HEIGHT - currentPipeGap - MIN_PIPE_HEIGHT;
+          const topHeight =
+            MIN_PIPE_HEIGHT + Math.random() * (maxTopHeight - MIN_PIPE_HEIGHT);
+
+          pipes.push({
+            x: WIDTH,
+            width: PIPE_WIDTH,
+            topHeight,
+            bottomY: topHeight + currentPipeGap,
+          });
+        }
+
+        function startGame() {
+          startBtn.style.display = "none";
+          resetGame();
+          gameLoop();
+        }
+
+        function drawBird() {
+          if (useImageForBird) {
+            // Draw image with rotation based on velocity
+            ctx.save();
+            ctx.translate(bird.x, bird.y);
+            // Rotate based on velocity (limited to reasonable angles)
+            const rotation = Math.max(
+              Math.min(bird.velocity * 0.1, Math.PI / 4),
+              -Math.PI / 4
+            );
+            ctx.rotate(rotation);
+            ctx.drawImage(
+              birdImage,
+              -bird.width / 2,
+              -bird.height / 2,
+              bird.width,
+              bird.height
+            );
+            ctx.restore();
+          } else {
+            // Fallback to circle
+            ctx.fillStyle = "brown";
+            ctx.beginPath();
+            ctx.arc(bird.x, bird.y, bird.radius, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+
+        function drawPipes() {
+          ctx.fillStyle = "green";
+          pipes.forEach((pipe) => {
+            ctx.fillRect(pipe.x, 0, pipe.width, pipe.topHeight);
+            ctx.fillRect(
+              pipe.x,
+              pipe.bottomY,
+              pipe.width,
+              HEIGHT - pipe.bottomY
+            );
+          });
+        }
+
+        function updatePipes() {
+          if (gameRunning) {
+            // Add new pipe when the last pipe has moved PIPE_SPACING pixels from the right edge
+            const lastPipe = pipes[pipes.length - 1];
+            if (
+              !lastPipe ||
+              WIDTH - (lastPipe.x + lastPipe.width) >= PIPE_SPACING
+            ) {
+              addPipe();
+            }
+          }
+
+          pipes.forEach((pipe) => (pipe.x -= pipeSpeed));
+          pipes = pipes.filter((pipe) => pipe.x + pipe.width > 0);
+
+          pipes.forEach((pipe) => {
+            if (pipe.x + pipe.width < bird.x && !pipe.scored) {
+              score++;
+              // Update pipe gap based on score
+              const gapReductions = Math.floor(score / SCORE_INTERVAL);
+              currentPipeGap = Math.max(
+                MIN_PIPE_GAP,
+                INITIAL_PIPE_GAP - gapReductions * GAP_REDUCTION
+              );
+              pipe.scored = true;
+            }
+          });
+        }
+
+        function drawScore() {
+          ctx.fillStyle = "black";
+          ctx.font = "20px Arial";
+          // Draw current score on the left
+          ctx.textAlign = "left";
+          ctx.fillText(`Score: ${score}`, 10, 30);
+
+          // Draw high score and games played on the right
+          ctx.textAlign = "right";
+          ctx.fillText(`High Score: ${highScore}`, WIDTH - 10, 30);
+          ctx.fillText(`Games: ${gamesPlayed}`, WIDTH - 10, 60);
+
+          // Reset text alignment to default
+          ctx.textAlign = "left";
+        }
+
+        function checkCollision() {
+          const birdHitbox = useImageForBird
+            ? {
+                top: bird.y - bird.height / 2,
+                bottom: bird.y + bird.height / 2,
+                left: bird.x - bird.width / 2,
+                right: bird.x + bird.width / 2,
+              }
+            : {
+                top: bird.y - bird.radius,
+                bottom: bird.y + bird.radius,
+                left: bird.x - bird.radius,
+                right: bird.x + bird.radius,
+              };
+
+          if (birdHitbox.bottom > HEIGHT || birdHitbox.top < 0) return true;
+
+          return pipes.some(
+            (pipe) =>
+              birdHitbox.right > pipe.x &&
+              birdHitbox.left < pipe.x + pipe.width &&
+              (birdHitbox.top < pipe.topHeight ||
+                birdHitbox.bottom > pipe.bottomY)
+          );
+        }
+
+        function updateGame() {
+          bird.velocity += gravity;
+          bird.y += bird.velocity;
+
+          if (checkCollision()) {
+            gameRunning = false;
+            // Update high score if current score is higher
+            if (score > highScore) {
+              highScore = score;
+              localStorage.setItem("flappyHighScore", highScore);
+            }
+            startBtn.style.display = "block";
+          }
+        }
+
+        function gameLoop() {
+          ctx.clearRect(0, 0, WIDTH, HEIGHT);
+          drawBird();
+          drawPipes();
+          drawScore();
+          updateGame();
+          updatePipes();
+
+          if (gameRunning) requestAnimationFrame(gameLoop);
+        }
+
+        document.addEventListener("keydown", (e) => {
+          if (e.code === "Space") {
+            if (gameRunning) {
+              bird.velocity = jumpStrength;
+            } else {
+              startGame();
+            }
+          }
+        });
+
+        startBtn.addEventListener("click", startGame);
+      });
+    </script>
+  </body>
+</html>
