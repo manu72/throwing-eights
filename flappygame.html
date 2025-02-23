@@ -139,11 +139,14 @@
         const MIN_PIPE_GAP = 100; // Minimum gap allowed
         const GAP_REDUCTION = 10; // How much to reduce gap by
         const SCORE_INTERVAL = 10; // Points needed for gap reduction
-        const PIPE_SPACING = 300; // Horizontal distance between pipes
-        const PIPE_WIDTH = 50;
+        const INITIAL_PIPE_SPACING = 300; // Initial horizontal distance between pipes
+        const MIN_PIPE_SPACING = 150; // Minimum horizontal distance between pipes
+        const SPACING_REDUCTION = 10; // How much to reduce spacing by
+        const PIPE_WIDTH = 40;
         const MIN_PIPE_HEIGHT = 50; // Minimum height for top/bottom pipes
 
         let currentPipeGap; // Track current gap size
+        let currentPipeSpacing; // Track current horizontal spacing
 
         function resetGame() {
           bird = {
@@ -160,6 +163,7 @@
           pipeSpeed = 3;
           score = 0;
           currentPipeGap = INITIAL_PIPE_GAP; // Reset pipe gap
+          currentPipeSpacing = INITIAL_PIPE_SPACING; // Reset pipe spacing
           gameRunning = true;
           gamesPlayed++;
           localStorage.setItem("flappyGamesPlayed", gamesPlayed);
@@ -235,7 +239,7 @@
             const lastPipe = pipes[pipes.length - 1];
             if (
               !lastPipe ||
-              WIDTH - (lastPipe.x + lastPipe.width) >= PIPE_SPACING
+              WIDTH - (lastPipe.x + lastPipe.width) >= currentPipeSpacing
             ) {
               addPipe();
             }
@@ -247,11 +251,15 @@
           pipes.forEach((pipe) => {
             if (pipe.x + pipe.width < bird.x && !pipe.scored) {
               score++;
-              // Update pipe gap based on score
-              const gapReductions = Math.floor(score / SCORE_INTERVAL);
+              // Update pipe gap and spacing based on score
+              const reductions = Math.floor(score / SCORE_INTERVAL);
               currentPipeGap = Math.max(
                 MIN_PIPE_GAP,
-                INITIAL_PIPE_GAP - gapReductions * GAP_REDUCTION
+                INITIAL_PIPE_GAP - reductions * GAP_REDUCTION
+              );
+              currentPipeSpacing = Math.max(
+                MIN_PIPE_SPACING,
+                INITIAL_PIPE_SPACING - reductions * SPACING_REDUCTION
               );
               pipe.scored = true;
             }
