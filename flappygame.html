@@ -12,7 +12,7 @@
       canvas {
         display: block;
         margin: auto;
-        background: url("bg.jpg") center center; /* Same as game background */
+        background: url("bg.jpg") center center, #87ceeb; /* Same as game background */
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
@@ -168,6 +168,10 @@
         };
 
         let bird, pipes, gravity, jumpStrength, pipeSpeed, score, gameRunning;
+        let coins = []; // Array to store coins
+        const COIN_SIZE = 15; // Size of coins
+        const COIN_VALUE = 5; // Points per coin
+        const COIN_SPAWN_CHANCE = 0.2; // 30% chance to spawn a coin with each pipe
 
         // Add these new constants for pipe configuration
         const INITIAL_PIPE_GAP = 250; // Initial gap between top and bottom pipes
@@ -213,10 +217,12 @@
         // Add after bird image loading
         //const flapSound = new Audio("swoosh.mp3");
         const crashSound = new Audio("squawk.mp3");
+        const coinSound = new Audio("coin.mp3"); // Add coin sound
 
         // Preload sounds
         //flapSound.load();
         crashSound.load();
+        coinSound.load();
 
         function resetGame() {
           bird = {
@@ -228,32 +234,79 @@
             height: 30,
           };
           pipes = [];
+          coins = []; // Reset coins
           gravity = 0.3;
           jumpStrength = -7;
           pipeSpeed = 3;
           score = 0;
-          currentPipeGap = INITIAL_PIPE_GAP; // Reset pipe gap
-          currentPipeSpacing = INITIAL_PIPE_SPACING; // Reset pipe spacing
+          currentPipeGap = INITIAL_PIPE_GAP;
+          currentPipeSpacing = INITIAL_PIPE_SPACING;
           gameRunning = true;
           gamesPlayed++;
           localStorage.setItem("flappyGamesPlayed", gamesPlayed);
-          // Add initial pipe
           addPipe();
         }
 
-        // Update addPipe function to use currentPipeGap
+        // Add after addPipe function
+        function addCoin(pipeX, pipeTopHeight, pipeBottomY) {
+          // Only add coin sometimes
+          if (Math.random() > COIN_SPAWN_CHANCE) return;
+
+          // Position coin in the middle of pipe gap
+          const coinY = pipeTopHeight + (pipeBottomY - pipeTopHeight) / 2;
+
+          coins.push({
+            x: pipeX + PIPE_WIDTH + 20, // Place coin after pipe
+            y: coinY,
+            collected: false,
+          });
+        }
+
+        function drawCoins() {
+          ctx.fillStyle = "gold";
+          ctx.strokeStyle = "darkgoldenrod";
+          ctx.lineWidth = 2;
+
+          coins.forEach((coin) => {
+            if (coin.collected) return;
+
+            ctx.beginPath();
+            ctx.arc(coin.x, coin.y, COIN_SIZE, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.stroke();
+
+            // Add shine effect
+            ctx.fillStyle = "rgba(255, 255, 255, 0.3)";
+            ctx.beginPath();
+            ctx.arc(
+              coin.x - COIN_SIZE / 3,
+              coin.y - COIN_SIZE / 3,
+              COIN_SIZE / 3,
+              0,
+              Math.PI * 2
+            );
+            ctx.fill();
+            ctx.fillStyle = "gold"; // Reset fill style
+          });
+        }
+
+        // Update addPipe function to include coin generation
         function addPipe() {
-          // Calculate random height but ensure minimum pipe heights
           const maxTopHeight = HEIGHT - currentPipeGap - MIN_PIPE_HEIGHT;
           const topHeight =
             MIN_PIPE_HEIGHT + Math.random() * (maxTopHeight - MIN_PIPE_HEIGHT);
+          const pipeX = WIDTH;
+          const bottomY = topHeight + currentPipeGap;
 
           pipes.push({
-            x: WIDTH,
+            x: pipeX,
             width: PIPE_WIDTH,
             topHeight,
-            bottomY: topHeight + currentPipeGap,
+            bottomY,
           });
+
+          // Add coin with the new pipe
+          addCoin(pipeX, topHeight, bottomY);
         }
 
         function startGame() {
@@ -391,14 +444,54 @@
           }
         }
 
+        function updateCoins() {
+          coins.forEach((coin) => {
+            if (!coin.collected) {
+              coin.x -= pipeSpeed;
+
+              // Check collision with bird
+              const birdHitbox = useImageForBird
+                ? {
+                    top: bird.y - bird.height * 0.3,
+                    bottom: bird.y + bird.height * 0.3,
+                    left: bird.x - bird.width * 0.4,
+                    right: bird.x + bird.width * 0.4,
+                  }
+                : {
+                    top: bird.y - bird.radius * 0.8,
+                    bottom: bird.y + bird.radius * 0.8,
+                    left: bird.x - bird.radius * 0.8,
+                    right: bird.x + bird.radius * 0.8,
+                  };
+
+              // Simple circle collision
+              const dx = bird.x - coin.x;
+              const dy = bird.y - coin.y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
+
+              if (distance < COIN_SIZE + bird.radius) {
+                coin.collected = true;
+                score += COIN_VALUE;
+                coinSound.currentTime = 0; // Reset sound to start
+                coinSound.play(); // Play coin collection sound
+              }
+            }
+          });
+
+          // Remove off-screen coins
+          coins = coins.filter((coin) => coin.x + COIN_SIZE > 0);
+        }
+
         function gameLoop() {
           ctx.clearRect(0, 0, WIDTH, HEIGHT);
-          drawBackground(); // Draw background first
+          drawBackground();
+          drawCoins(); // Draw coins before pipes so they appear behind
           drawBird();
           drawPipes();
           drawScore();
           updateGame();
           updatePipes();
+          updateCoins(); // Update coin positions and check collisions
 
           if (gameRunning) requestAnimationFrame(gameLoop);
         }
