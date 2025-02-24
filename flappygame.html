@@ -12,7 +12,7 @@
       canvas {
         display: block;
         margin: auto;
-        background: linear-gradient(180deg, #87ceeb 0%, #e0f6ff 100%);
+        background: url("bg.jpg") center center; /* Same as game background */
         border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       }
@@ -182,6 +182,33 @@
 
         let currentPipeGap; // Track current gap size
         let currentPipeSpacing; // Track current horizontal spacing
+
+        // Background setup
+        const bgImage = new Image();
+        bgImage.src = "bg.jpg";
+        let bgX = 0;
+        const BG_SCROLL_SPEED = 1;
+        let bgLoaded = false;
+
+        bgImage.onload = () => {
+          bgLoaded = true;
+        };
+
+        function drawBackground() {
+          if (!bgLoaded) return; // Don't draw until image is loaded
+
+          // Draw background at its natural dimensions
+          ctx.drawImage(bgImage, bgX, 0);
+          ctx.drawImage(bgImage, bgX + bgImage.width, 0);
+
+          // Move background left
+          bgX -= BG_SCROLL_SPEED;
+
+          // Reset when first image is fully off screen
+          if (bgX <= -bgImage.width) {
+            bgX = 0;
+          }
+        }
 
         // Add after bird image loading
         //const flapSound = new Audio("swoosh.mp3");
@@ -366,6 +393,7 @@
 
         function gameLoop() {
           ctx.clearRect(0, 0, WIDTH, HEIGHT);
+          drawBackground(); // Draw background first
           drawBird();
           drawPipes();
           drawScore();
