@@ -103,6 +103,23 @@
     <script src="assets/js/main.js"></script>
 
     <script>
+      // Register service worker for offline support
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("./service-worker.js")
+            .then((registration) => {
+              console.log(
+                "Service Worker registered with scope:",
+                registration.scope
+              );
+            })
+            .catch((error) => {
+              console.error("Service Worker registration failed:", error);
+            });
+        });
+      }
+
       document.addEventListener("DOMContentLoaded", () => {
         const canvas = document.getElementById("flappyCanvas");
         const ctx = canvas.getContext("2d");
@@ -175,7 +192,7 @@
 
         // Add these new constants for pipe configuration
         const INITIAL_PIPE_GAP = 250; // Initial gap between top and bottom pipes
-        const MIN_PIPE_GAP = 100; // Minimum gap allowed
+        const MIN_PIPE_GAP = 70; // Minimum gap allowed
         const GAP_REDUCTION = 10; // How much to reduce gap by
         const SCORE_INTERVAL = 10; // Points needed for gap reduction
         const INITIAL_PIPE_SPACING = 300; // Initial horizontal distance between pipes

@@ -1,0 +1,60 @@
+/* Self-hosted Google Fonts */
+
+/* Lobster */
+@font-face {
+  font-family: "Lobster";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Lobster"), url("../fonts/google/lobster.woff2") format("woff2");
+  font-display: swap;
+}
+
+/* Open Sans - Regular */
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 400;
+  src: local("Open Sans Regular"), local("OpenSans-Regular"),
+    url("../fonts/google/opensans.woff2") format("woff2");
+  font-display: swap;
+}
+
+/* Open Sans - Bold */
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 700;
+  src: local("Open Sans Bold"), local("OpenSans-Bold"),
+    url("../fonts/google/opensans-bold.woff2") format("woff2");
+  font-display: swap;
+}
+
+/* Open Sans - Light */
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 300;
+  src: local("Open Sans Light"), local("OpenSans-Light"),
+    url("../fonts/google/opensans-light.woff2") format("woff2");
+  font-display: swap;
+}
+
+/* Open Sans - SemiBold */
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 600;
+  src: local("Open Sans SemiBold"), local("OpenSans-SemiBold"),
+    url("../fonts/google/opensans-semibold.woff2") format("woff2");
+  font-display: swap;
+}
+
+/* Open Sans - ExtraBold */
+@font-face {
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 800;
+  src: local("Open Sans ExtraBold"), local("OpenSans-ExtraBold"),
+    url("../fonts/google/opensans-extrabold.woff2") format("woff2");
+  font-display: swap;
+}
