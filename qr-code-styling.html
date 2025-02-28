@@ -125,6 +125,7 @@
       <ul class="links">
         <li><a href="/">Home</a></li>
         <li><a href="about.html">About</a></li>
+        <li><a href="flappygame.html">Flappy Game</a></li>
         <li><a href="qr-generator.html">QR Generator</a></li>
         <li><a href="qr-code-styling.html">QR Style by Manu</a></li>
         <li><a href="#footer">Contact</a></li>
@@ -136,12 +137,11 @@
       <div class="inner">
         <article class="box">
           <header>
-            <h2 style="text-align: center;">QR Code Styling by Manu</h2>
+            <h2 style="text-align: center">QR Code Styling by Manu</h2>
           </header>
 
           <!-- Existing content starts here -->
           <div class="container">
-
             <div id="canvas"></div>
 
             <div class="input-group">
@@ -309,7 +309,7 @@
         // Clear previous QR code
         document.getElementById("canvas").innerHTML = "";
 
-        const containerWidth = document.getElementById('canvas').clientWidth; // get the width of the container
+        const containerWidth = document.getElementById("canvas").clientWidth; // get the width of the container
         const size = Math.min(300, containerWidth - 20); // set the size of the qr code to the width of the container minus 20px
 
         qrCode = new QRCodeStyling({
@@ -376,11 +376,11 @@
       // Generate initial QR code
       generateQR();
       //window.addEventListener('resize', generateQR); // generate the qr code when the window is resized
-      window.addEventListener('resize', () => {
-        const containerWidth = document.getElementById('canvas').clientWidth;
+      window.addEventListener("resize", () => {
+        const containerWidth = document.getElementById("canvas").clientWidth;
         const currentSize = Math.min(300, containerWidth - 20);
         if (qrCode && qrCode._options.width !== currentSize) {
-            generateQR();
+          generateQR();
         }
       });
     </script>
