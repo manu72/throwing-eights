@@ -4,14 +4,20 @@
     <title>QR Code Generator | Throwing Eights</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Generate customizable QR codes with style options including colors, size, and logo integration." />
+    <meta
+      name="description"
+      content="Generate customizable QR codes with style options including colors, size, and logo integration."
+    />
     <link rel="stylesheet" href="assets/css/main.css" />
     <link rel="stylesheet" href="assets/css/qr-generator.css" />
     <!-- QR Code library -->
     <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs@master/qrcode.min.js"></script>
     <!-- Color picker -->
     <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/classic.min.css"
+    />
   </head>
   <body class="subpage">
     <!-- Header -->
@@ -27,6 +33,7 @@
       <ul class="links">
         <li><a href="/">Home</a></li>
         <li><a href="about.html">About</a></li>
+        <li><a href="flappygame.html">Flappy Game</a></li>
         <li><a href="qr-generator.html">QR Generator</a></li>
         <li><a href="qr-code-styling.html">QR Style by Manu</a></li>
         <li><a href="#footer">Contact</a></li>
@@ -45,7 +52,13 @@
             <div class="qr-generator">
               <div class="url-input">
                 <label for="url">Enter URL</label>
-                <input type="url" id="url" name="url" placeholder="https://throwingeights.com.au" required />
+                <input
+                  type="url"
+                  id="url"
+                  name="url"
+                  placeholder="https://throwingeights.com.au"
+                  required
+                />
                 <span class="validation-message"></span>
               </div>
 
@@ -57,8 +70,12 @@
                       <div class="preview-light active"></div>
                       <div class="preview-dark"></div>
                       <div class="preview-controls">
-                        <button id="switch-bg" class="button small">Switch Background</button>
-                        <button id="download-btn" class="button small">Download QR Code</button>
+                        <button id="switch-bg" class="button small">
+                          Switch Background
+                        </button>
+                        <button id="download-btn" class="button small">
+                          Download QR Code
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -67,11 +84,18 @@
                 <div class="qr-style-section">
                   <div class="style-options">
                     <h3>Style Options</h3>
-                    
+
                     <div class="option-group">
                       <label for="size">Size</label>
                       <div class="size-control">
-                        <input type="range" id="size" name="size" min="128" max="512" value="256" />
+                        <input
+                          type="range"
+                          id="size"
+                          name="size"
+                          min="128"
+                          max="512"
+                          value="256"
+                        />
                         <span class="size-value">256 x 256</span>
                       </div>
                     </div>
@@ -99,15 +123,22 @@
                         <option value="H">High (30%)</option>
                       </select>
                       <div class="tooltip">
-                        Higher correction levels allow for more damage to the QR code while remaining scannable
+                        Higher correction levels allow for more damage to the QR
+                        code while remaining scannable
                       </div>
                     </div>
 
                     <div class="option-group">
                       <label for="logo">Center Logo</label>
-                      <input type="file" id="logo" name="logo" accept="image/*" />
+                      <input
+                        type="file"
+                        id="logo"
+                        name="logo"
+                        accept="image/*"
+                      />
                       <div class="tooltip">
-                        Recommended: small, square image with transparent background
+                        Recommended: small, square image with transparent
+                        background
                       </div>
                     </div>
                   </div>
@@ -116,22 +147,95 @@
             </div>
 
             <!-- Download Modal -->
-            <div id="download-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); z-index: 999999; justify-content: center; align-items: center;">
-                <div style="background: #2b2b2b; padding: 2em; border-radius: 4px; max-width: 500px; width: 90%; text-align: center;">
-                    <h2 style="margin-bottom: 0.5em;">DOWNLOAD QR CODE</h2>
-                    <p style="color: #888; margin-bottom: 2em;">Choose your preferred format:</p>
-                    <div style="display: flex; gap: 1em; margin: 2em 0; justify-content: center;">
-                        <button class="button special download-option" data-format="png" style="flex: 1; max-width: 200px; height: auto; padding: 1.5em 1em; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-                            <span style="font-size: 1.2em; margin-bottom: 0.5em;">PNG</span>
-                            <span style="font-size: 0.8em; opacity: 0.8; display: block;">BEST FOR GENERAL USE</span>
-                        </button>
-                        <button class="button special download-option" data-format="svg" style="flex: 1; max-width: 200px; height: auto; padding: 1.5em 1em; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
-                            <span style="font-size: 1.2em; margin-bottom: 0.5em;">SVG</span>
-                            <span style="font-size: 0.8em; opacity: 0.8; display: block;">BEST FOR SCALING & EDITING</span>
-                        </button>
-                    </div>
-                    <button class="button small modal-close" style="margin-top: 1em;">Cancel</button>
+            <div
+              id="download-modal"
+              style="
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.9);
+                z-index: 999999;
+                justify-content: center;
+                align-items: center;
+              "
+            >
+              <div
+                style="
+                  background: #2b2b2b;
+                  padding: 2em;
+                  border-radius: 4px;
+                  max-width: 500px;
+                  width: 90%;
+                  text-align: center;
+                "
+              >
+                <h2 style="margin-bottom: 0.5em">DOWNLOAD QR CODE</h2>
+                <p style="color: #888; margin-bottom: 2em">
+                  Choose your preferred format:
+                </p>
+                <div
+                  style="
+                    display: flex;
+                    gap: 1em;
+                    margin: 2em 0;
+                    justify-content: center;
+                  "
+                >
+                  <button
+                    class="button special download-option"
+                    data-format="png"
+                    style="
+                      flex: 1;
+                      max-width: 200px;
+                      height: auto;
+                      padding: 1.5em 1em;
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      justify-content: center;
+                      text-align: center;
+                    "
+                  >
+                    <span style="font-size: 1.2em; margin-bottom: 0.5em"
+                      >PNG</span
+                    >
+                    <span style="font-size: 0.8em; opacity: 0.8; display: block"
+                      >BEST FOR GENERAL USE</span
+                    >
+                  </button>
+                  <button
+                    class="button special download-option"
+                    data-format="svg"
+                    style="
+                      flex: 1;
+                      max-width: 200px;
+                      height: auto;
+                      padding: 1.5em 1em;
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      justify-content: center;
+                      text-align: center;
+                    "
+                  >
+                    <span style="font-size: 1.2em; margin-bottom: 0.5em"
+                      >SVG</span
+                    >
+                    <span style="font-size: 0.8em; opacity: 0.8; display: block"
+                      >BEST FOR SCALING & EDITING</span
+                    >
+                  </button>
                 </div>
+                <button
+                  class="button small modal-close"
+                  style="margin-top: 1em"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
         </article>
@@ -145,18 +249,25 @@
         <form action="#" method="post">
           <div class="field half first">
             <label for="name">Name</label>
-            <input name="name" id="name" type="text" placeholder="Name">
+            <input name="name" id="name" type="text" placeholder="Name" />
           </div>
           <div class="field half">
             <label for="email">Email</label>
-            <input name="email" id="email" type="email" placeholder="Email">
+            <input name="email" id="email" type="email" placeholder="Email" />
           </div>
           <div class="field">
             <label for="message">Message</label>
-            <textarea name="message" id="message" rows="6" placeholder="Message"></textarea>
+            <textarea
+              name="message"
+              id="message"
+              rows="6"
+              placeholder="Message"
+            ></textarea>
           </div>
           <ul class="actions">
-            <li><input value="Send Message" class="button alt" type="submit"></li>
+            <li>
+              <input value="Send Message" class="button alt" type="submit" />
+            </li>
           </ul>
         </form>
       </div>
@@ -171,4 +282,4 @@
     <script src="assets/js/main.js"></script>
     <script src="assets/js/qr-generator.js"></script>
   </body>
-</html> 
+</html>

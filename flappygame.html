@@ -233,13 +233,24 @@
 
         // Add after bird image loading
         //const flapSound = new Audio("swoosh.mp3");
-        const crashSound = new Audio("squawk.mp3");
-        const coinSound = new Audio("coin.mp3"); // Add coin sound
-
-        // Preload sounds
-        //flapSound.load();
-        crashSound.load();
-        coinSound.load();
+        const crashSoundSrc = "squawk.mp3";
+        const coinSoundSrc = "coin.mp3"; // Add coin sound
+        
+        // Create functions to get fresh audio instances for better playback
+        function createCrashSound() {
+          const sound = new Audio(crashSoundSrc);
+          sound.load();
+          return sound;
+        }
+        
+        function createCoinSound() {
+          const sound = new Audio(coinSoundSrc);
+          sound.load();
+          return sound;
+        }
+        
+        // Initialize sounds
+        const crashSound = createCrashSound();
 
         function resetGame() {
           bird = {
@@ -328,7 +339,6 @@
 
         function startGame() {
           startBtn.style.display = "none";
-          crashSound.currentTime = 0; // reset sound to start
           resetGame();
           gameLoop();
         }
@@ -450,14 +460,24 @@
           bird.y += bird.velocity;
 
           if (checkCollision()) {
-            crashSound.play(); // play crash sound immediately
-            gameRunning = false; // then stop the game
-
-            if (score > highScore) {
-              highScore = score;
-              localStorage.setItem("flappyHighScore", highScore);
-            }
-            startBtn.style.display = "block";
+            // Create a new crash sound instance
+            const sound = createCrashSound();
+            
+            // Ensure sound plays before stopping the game
+            sound.play()
+              .catch(e => console.log("Error playing crash sound:", e))
+              .finally(() => {
+                // Set a small delay to let the sound start playing before stopping game
+                setTimeout(() => {
+                  gameRunning = false;
+                  
+                  if (score > highScore) {
+                    highScore = score;
+                    localStorage.setItem("flappyHighScore", highScore);
+                  }
+                  startBtn.style.display = "block";
+                }, 10);
+              });
           }
         }
 
@@ -489,8 +509,8 @@
               if (distance < COIN_SIZE + bird.radius) {
                 coin.collected = true;
                 score += COIN_VALUE;
-                coinSound.currentTime = 0; // Reset sound to start
-                coinSound.play(); // Play coin collection sound
+                // Create and play a new coin sound instance for each coin
+                createCoinSound().play().catch(e => console.log("Error playing coin sound:", e));
               }
             }
           });
