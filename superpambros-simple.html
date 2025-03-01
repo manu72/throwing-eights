@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Super Pam Bros - Simple Version</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #87ceeb;
+        font-family: Arial, sans-serif;
+      }
+
+      #game-container {
+        position: relative;
+        width: 600px;
+        height: 400px;
+        background-color: #b3e0ff;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      }
+
+      #gameCanvas {
+        width: 100%;
+        height: 100%;
+        background-color: #b3e0ff;
+      }
+
+      #start-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 12px 24px;
+        background-color: #f64747;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 18px;
+        cursor: pointer;
+        z-index: 100;
+      }
+
+      #start-btn:hover {
+        background-color: #e43535;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game-container">
+      <canvas id="gameCanvas"></canvas>
+      <button id="start-btn">Start Game</button>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get DOM elements
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+        const startBtn = document.getElementById("start-btn");
+
+        // Set canvas size
+        canvas.width = 600;
+        canvas.height = 400;
+
+        // Game variables
+        let gameRunning = false;
+        let player = {
+          x: 50,
+          y: 200,
+          width: 30,
+          height: 30,
+          color: "blue",
+        };
+
+        // Draw player
+        function drawPlayer() {
+          ctx.fillStyle = player.color;
+          ctx.fillRect(player.x, player.y, player.width, player.height);
+        }
+
+        // Game loop
+        function gameLoop() {
+          // Clear canvas
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          // Draw player
+          drawPlayer();
+
+          // Continue loop if game is running
+          if (gameRunning) {
+            requestAnimationFrame(gameLoop);
+          }
+        }
+
+        // Start game function
+        function startGame() {
+          console.log("Starting game...");
+
+          // Hide start button
+          startBtn.style.display = "none";
+
+          // Set game as running
+          gameRunning = true;
+
+          // Start game loop
+          gameLoop();
+
+          console.log("Game started!");
+        }
+
+        // Add event listener to start button
+        startBtn.addEventListener("click", function () {
+          console.log("Start button clicked");
+          startGame();
+        });
+
+        // Also allow starting with spacebar
+        document.addEventListener("keydown", function (e) {
+          if (e.code === "Space" && !gameRunning) {
+            console.log("Space pressed, starting game");
+            startGame();
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

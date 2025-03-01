@@ -74,6 +74,7 @@
         <li><a href="/">Home</a></li>
         <li><a href="about.html">About</a></li>
         <li><a href="flappygame.html">Flappy Game</a></li>
+        <li><a href="superpambros.html">Super Pam Bros</a></li>
         <li><a href="qr-generator.html">QR Generator</a></li>
         <li><a href="qr-code-styling.html">QR Style by Manu</a></li>
         <li><a href="#footer">Contact</a></li>
@@ -235,20 +236,20 @@
         //const flapSound = new Audio("swoosh.mp3");
         const crashSoundSrc = "squawk.mp3";
         const coinSoundSrc = "coin.mp3"; // Add coin sound
-        
+
         // Create functions to get fresh audio instances for better playback
         function createCrashSound() {
           const sound = new Audio(crashSoundSrc);
           sound.load();
           return sound;
         }
-        
+
         function createCoinSound() {
           const sound = new Audio(coinSoundSrc);
           sound.load();
           return sound;
         }
-        
+
         // Initialize sounds
         const crashSound = createCrashSound();
 
@@ -462,15 +463,16 @@
           if (checkCollision()) {
             // Create a new crash sound instance
             const sound = createCrashSound();
-            
+
             // Ensure sound plays before stopping the game
-            sound.play()
-              .catch(e => console.log("Error playing crash sound:", e))
+            sound
+              .play()
+              .catch((e) => console.log("Error playing crash sound:", e))
               .finally(() => {
                 // Set a small delay to let the sound start playing before stopping game
                 setTimeout(() => {
                   gameRunning = false;
-                  
+
                   if (score > highScore) {
                     highScore = score;
                     localStorage.setItem("flappyHighScore", highScore);
@@ -510,7 +512,9 @@
                 coin.collected = true;
                 score += COIN_VALUE;
                 // Create and play a new coin sound instance for each coin
-                createCoinSound().play().catch(e => console.log("Error playing coin sound:", e));
+                createCoinSound()
+                  .play()
+                  .catch((e) => console.log("Error playing coin sound:", e));
               }
             }
           });
