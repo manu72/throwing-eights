@@ -56,6 +56,100 @@ throwing-eights/
 - Color Picker Library (@simonwep/pickr)
 - Self-hosted web fonts (Google Fonts: Open Sans, Lobster)
 
+## 🎮 Flappy Game
+
+The Flappy Bird-style game is a fully-featured HTML5 Canvas game with progressive difficulty, coin collection, and mobile-responsive controls.
+
+### How to Play
+
+- **Desktop:** Press `Space` to make the bird flap
+- **Mobile:** Tap the screen to make the bird flap
+- Navigate through green pipes while collecting gold coins
+- Game gets progressively harder as your score increases
+- Avoid hitting pipes or the ground/ceiling
+
+### Game Features
+
+- **Progressive Difficulty:** Pipe gaps get smaller and spacing decreases as score increases
+- **Coin Collection:** Collect gold coins for bonus points (5 points each)
+- **High Score Tracking:** Automatically saves high scores and games played to localStorage
+- **Mobile Responsive:** Adapts canvas size for different screen sizes and orientations
+- **Sound Effects:** Crash sounds when hitting obstacles, coin collection sounds
+- **Background Animation:** Scrolling background with custom imagery
+- **Custom Bird:** Uses custom image (pam.png) with rotation based on velocity
+
+### Configuration Settings
+
+All game settings can be modified in `flappygame.html:188-277`. Key configuration constants:
+
+#### Pipe Configuration
+```javascript
+const INITIAL_PIPE_GAP = 250;     // Starting gap between top and bottom pipes
+const MIN_PIPE_GAP = 70;          // Minimum gap (hardest difficulty)
+const GAP_REDUCTION = 10;         // Gap reduction per difficulty level
+const SCORE_INTERVAL = 10;        // Points needed to increase difficulty
+const INITIAL_PIPE_SPACING = 300; // Starting horizontal distance between pipes
+const MIN_PIPE_SPACING = 100;     // Minimum horizontal spacing
+const SPACING_REDUCTION = 10;     // Spacing reduction per difficulty level
+const PIPE_WIDTH = 40;            // Width of pipes
+const MIN_PIPE_HEIGHT = 50;       // Minimum height for pipe segments
+```
+
+#### Coin Configuration
+```javascript
+const COIN_SIZE = 15;             // Radius of coins in pixels
+const COIN_VALUE = 5;             // Points awarded per coin
+const COIN_SPAWN_CHANCE = 0.2;    // Probability of coin spawning (20%)
+```
+
+#### Game Physics
+```javascript
+// In resetGame() function (flappygame.html:267-269)
+gravity = 0.3;                    // Downward acceleration
+jumpStrength = -7;                // Upward velocity when flapping
+pipeSpeed = 3;                    // Horizontal speed of pipes
+```
+
+#### Bird Configuration
+```javascript
+// Bird object properties (flappygame.html:257-264)
+bird = {
+  x: 50,                          // Horizontal position (fixed)
+  y: HEIGHT / 3,                  // Starting vertical position
+  radius: 15,                     // Collision radius (fallback)
+  width: 30,                      // Image width
+  height: 30,                     // Image height
+  velocity: 0                     // Current vertical velocity
+};
+```
+
+#### Visual Settings
+```javascript
+const BG_SCROLL_SPEED = 1;        // Background scrolling speed
+// Canvas sizing in getCanvasSize() function (flappygame.html:145-159)
+// Default: 600x600, mobile portrait: 90% width x 600 height
+```
+
+### Difficulty Progression
+
+The game automatically increases difficulty based on score:
+- Every 10 points (`SCORE_INTERVAL`), the pipe gap decreases by 10 pixels
+- Horizontal spacing between pipes also decreases by 10 pixels
+- Minimum limits prevent impossible gameplay
+- Progression formula: `current = max(minimum, initial - (score/10) * reduction)`
+
+### Audio Assets
+
+- `squawk.mp3` - Crash/collision sound effect
+- `coin.mp3` - Coin collection sound effect
+- Sounds are dynamically loaded for better performance
+
+### Image Assets
+
+- `pam.png` - Custom bird sprite
+- `bg.jpg` - Scrolling background image
+- Fallback: Brown circle if bird image fails to load
+
 ## ⚙️ Development Setup
 
 1. Clone the repository:
