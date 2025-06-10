@@ -232,26 +232,30 @@
           }
         }
 
-        // Add after bird image loading
-        //const flapSound = new Audio("swoosh.mp3");
-        const crashSoundSrc = "squawk.mp3";
-        const coinSoundSrc = "coin.mp3"; // Add coin sound
+        // Pre-load audio for better performance and timing
+        const crashSound = new Audio("squawk.mp3");
+        const coinSound = new Audio("coin.mp3");
 
-        // Create functions to get fresh audio instances for better playback
-        function createCrashSound() {
-          const sound = new Audio(crashSoundSrc);
-          sound.load();
-          return sound;
+        // Configure audio settings
+        crashSound.preload = "auto";
+        coinSound.preload = "auto";
+        crashSound.volume = 0.7;
+        coinSound.volume = 0.5;
+
+        // Load audio files immediately
+        crashSound.load();
+        coinSound.load();
+
+        // Initialize audio context on first user interaction
+        let audioInitialized = false;
+        function initAudio() {
+          if (!audioInitialized) {
+            audioInitialized = true;
+            // Ensure audio can play by resetting
+            crashSound.currentTime = 0;
+            coinSound.currentTime = 0;
+          }
         }
-
-        function createCoinSound() {
-          const sound = new Audio(coinSoundSrc);
-          sound.load();
-          return sound;
-        }
-
-        // Initialize sounds
-        const crashSound = createCrashSound();
 
         function resetGame() {
           bird = {
@@ -340,6 +344,7 @@
 
         function startGame() {
           startBtn.style.display = "none";
+          initAudio(); // Initialize audio on first user interaction
           resetGame();
           gameLoop();
         }
@@ -461,25 +466,25 @@
           bird.y += bird.velocity;
 
           if (checkCollision()) {
-            // Create a new crash sound instance
-            const sound = createCrashSound();
+            // Stop game immediately for instant response
+            gameRunning = false;
 
-            // Ensure sound plays before stopping the game
-            sound
-              .play()
-              .catch((e) => console.log("Error playing crash sound:", e))
-              .finally(() => {
-                // Set a small delay to let the sound start playing before stopping game
-                setTimeout(() => {
-                  gameRunning = false;
+            // Play crash sound without blocking game state
+            try {
+              crashSound.currentTime = 0; // Reset to start
+              crashSound
+                .play()
+                .catch((e) => console.log("Error playing crash sound:", e));
+            } catch (e) {
+              console.log("Audio play error:", e);
+            }
 
-                  if (score > highScore) {
-                    highScore = score;
-                    localStorage.setItem("flappyHighScore", highScore);
-                  }
-                  startBtn.style.display = "block";
-                }, 10);
-              });
+            // Handle score and UI updates immediately
+            if (score > highScore) {
+              highScore = score;
+              localStorage.setItem("flappyHighScore", highScore);
+            }
+            startBtn.style.display = "block";
           }
         }
 
@@ -511,10 +516,15 @@
               if (distance < COIN_SIZE + bird.radius) {
                 coin.collected = true;
                 score += COIN_VALUE;
-                // Create and play a new coin sound instance for each coin
-                createCoinSound()
-                  .play()
-                  .catch((e) => console.log("Error playing coin sound:", e));
+                // Play coin sound with pre-loaded audio
+                try {
+                  coinSound.currentTime = 0; // Reset to start for overlapping sounds
+                  coinSound
+                    .play()
+                    .catch((e) => console.log("Error playing coin sound:", e));
+                } catch (e) {
+                  console.log("Coin audio play error:", e);
+                }
               }
             }
           });
@@ -540,6 +550,7 @@
         // In the jump handler (both keyboard and touch)
         function jump() {
           if (gameRunning) {
+            initAudio(); // Ensure audio is initialized on first interaction
             bird.velocity = jumpStrength;
             //flapSound.currentTime = 0; // Reset sound to start
             //flapSound.play();
