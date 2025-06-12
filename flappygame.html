@@ -187,7 +187,7 @@
 
         let bird, pipes, gravity, jumpStrength, pipeSpeed, score, gameRunning;
         let coins = []; // Array to store coins
-        const COIN_SIZE = 15; // Size of coins
+        const COIN_SIZE = 13; // Size of coins
         const COIN_VALUE = 5; // Points per coin
         const COIN_SPAWN_CHANCE = 0.2; // 20% chance to spawn a coin with each pipe
 
@@ -196,21 +196,21 @@
         // ========================================
         // Adjust these values to change overall game speed and difficulty
         // Higher values = faster/harder gameplay, Lower values = slower/easier gameplay
-        
-        const GAME_SPEED_MULTIPLIER = 1.0;      // Master speed control (1.0 = normal, 0.5 = half speed, 2.0 = double speed)
-        const PHYSICS_TARGET_FPS = 60;          // Target FPS for physics calculations (60 recommended)
-        
+
+        const GAME_SPEED_MULTIPLIER = 1.4; // Master speed control (1.0 = normal, 0.5 = half speed, 2.0 = double speed)
+        const PHYSICS_TARGET_FPS = 60; // Target FPS for physics calculations (60 recommended)
+
         // Original frame-based physics values (these worked correctly)
-        const ORIGINAL_GRAVITY = 0.3;      // Original gravity per frame
-        const ORIGINAL_JUMP = -7;          // Original jump strength per frame  
-        const ORIGINAL_PIPE_SPEED = 3;     // Original pipe speed per frame
-        const ORIGINAL_BG_SPEED = 1;       // Original background speed per frame
+        const ORIGINAL_GRAVITY = 0.25; // Original gravity per frame 0.3
+        const ORIGINAL_JUMP = -7; // Original jump strength per frame -7
+        const ORIGINAL_PIPE_SPEED = 3; // Original pipe speed per frame 3
+        const ORIGINAL_BG_SPEED = 1; // Original background speed per frame 1
 
         // ========================================
         // DELTA TIME VARIABLES
         // ========================================
-        let lastFrameTime = 0;                  // Track time of last frame
-        let deltaTime = 0;                      // Time elapsed since last frame (in seconds)
+        let lastFrameTime = 0; // Track time of last frame
+        let deltaTime = 0; // Time elapsed since last frame (in seconds)
         let gameSpeedMultiplier = GAME_SPEED_MULTIPLIER; // Current speed multiplier (can be changed dynamically)
 
         // Add these new constants for pipe configuration
@@ -232,7 +232,7 @@
         bgImage.src = "bg.jpg";
         let bgX = 0;
         let bgLoaded = false;
-        
+
         // Debug: Uncomment to check initial bgX value
         // console.log("Initial bgX value:", bgX, "type:", typeof bgX);
 
@@ -261,9 +261,9 @@
             console.error("timeScale is NaN in background! Using 1.0");
             timeScale = 1.0;
           }
-          
+
           bgX -= ORIGINAL_BG_SPEED * timeScale;
-          
+
           // Debug: Uncomment to monitor background movement
           // if (Math.random() < 0.01) {
           //   console.log("Background update - bgX:", bgX.toFixed(2), "timeScale:", timeScale.toFixed(3));
@@ -305,36 +305,36 @@
             x: 50,
             y: HEIGHT / 3,
             radius: 15,
-            velocity: 0,        // Bird velocity in pixels/second
+            velocity: 0, // Bird velocity in pixels/second
             width: 30,
             height: 30,
           };
           pipes = [];
           coins = []; // Reset coins
-          
+
           // ========================================
           // DELTA TIME: Physics Reset
           // ========================================
           // Use original frame-based values with delta time normalization
-          gravity = ORIGINAL_GRAVITY;             // Gravity per frame
-          jumpStrength = ORIGINAL_JUMP;           // Jump strength per frame  
-          pipeSpeed = ORIGINAL_PIPE_SPEED;        // Pipe speed per frame
-          
+          gravity = ORIGINAL_GRAVITY; // Gravity per frame
+          jumpStrength = ORIGINAL_JUMP; // Jump strength per frame
+          pipeSpeed = ORIGINAL_PIPE_SPEED; // Pipe speed per frame
+
           score = 0;
           currentPipeGap = INITIAL_PIPE_GAP;
           currentPipeSpacing = INITIAL_PIPE_SPACING;
           gameRunning = true;
           gamesPlayed++;
           localStorage.setItem("flappyGamesPlayed", gamesPlayed);
-          
+
           // Reset delta time tracking
           lastFrameTime = 0;
           deltaTime = 0;
-          
+
           // Debug: Uncomment to monitor game initialization
           // console.log("Game reset - bird.x:", bird.x, "bird.y:", bird.y, "HEIGHT:", HEIGHT, "HEIGHT/3:", HEIGHT/3);
           // console.log("Physics values - gravity:", gravity, "jumpStrength:", jumpStrength, "pipeSpeed:", pipeSpeed);
-          
+
           addPipe();
         }
 
@@ -539,11 +539,11 @@
             console.error("timeScale is NaN! Using 1.0");
             timeScale = 1.0;
           }
-          
+
           // Apply original physics scaled by time to maintain consistent speed
           bird.velocity += gravity * timeScale;
           bird.y += bird.velocity * timeScale;
-          
+
           // Debug: Uncomment to monitor bird physics
           // if (Math.random() < 0.01) {
           //   console.log("Bird update - y:", bird.y.toFixed(2), "velocity:", bird.velocity.toFixed(3), "gravity:", gravity, "timeScale:", timeScale.toFixed(3));
@@ -632,24 +632,24 @@
             // Delta time in seconds (convert from milliseconds)
             deltaTime = (currentTime - lastFrameTime) / 1000;
             lastFrameTime = currentTime;
-            
+
             // Cap delta time to prevent huge jumps (e.g., when tab was inactive)
             deltaTime = Math.min(deltaTime, 1 / PHYSICS_TARGET_FPS);
           }
-          
+
           // Simple scaling factor: how much faster/slower than 60 FPS
           // At 60 FPS: timeScale = 1.0 (normal speed)
           // At 30 FPS: timeScale = 2.0 (double movement to compensate)
           // At 120 FPS: timeScale = 0.5 (half movement to compensate)
-          let timeScale = (deltaTime * PHYSICS_TARGET_FPS) * gameSpeedMultiplier;
-          
+          let timeScale = deltaTime * PHYSICS_TARGET_FPS * gameSpeedMultiplier;
+
           // Safety check for timeScale
           if (isNaN(timeScale) || timeScale <= 0) {
             timeScale = 1.0;
           }
-          
+
           // Debug: Uncomment to monitor timeScale values
-          // if (Math.random() < 0.01) { 
+          // if (Math.random() < 0.01) {
           //   console.log("timeScale:", timeScale.toFixed(3), "deltaTime:", deltaTime.toFixed(4));
           // }
 
@@ -674,14 +674,14 @@
         function jump() {
           if (gameRunning) {
             initAudio(); // Ensure audio is initialized on first interaction
-            
+
             // ========================================
             // DELTA TIME: Jump Physics
             // ========================================
             // Set bird velocity using original frame-based value
             // This gives instant upward velocity (negative = upward)
             bird.velocity = jumpStrength;
-            
+
             //flapSound.currentTime = 0; // Reset sound to start
             //flapSound.play();
           }
