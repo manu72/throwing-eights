@@ -12,6 +12,11 @@
     <link rel="icon" type="image/png" href="favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
     <link rel="stylesheet" href="assets/css/main.css" />
+    <!-- EmailJS -->
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
+    ></script>
   </head>
   <body>
     <!-- Header -->
@@ -153,18 +158,19 @@
       </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Footer Commented out for now 
     <footer id="footer">
       <div class="inner">
         <h2>Contact Us</h2>
-        <form action="#" method="post">
+        <div id="form-status" style="display: none; margin-bottom: 1em; padding: 1em; border-radius: 5px;"></div>
+        <form id="contact-form" action="#" method="post">
           <div class="field half first">
             <label for="name">Name</label>
-            <input name="name" id="name" type="text" placeholder="Name" />
+            <input name="name" id="name" type="text" placeholder="Name" required />
           </div>
           <div class="field half">
             <label for="email">Email</label>
-            <input name="email" id="email" type="email" placeholder="Email" />
+            <input name="email" id="email" type="email" placeholder="Email" required />
           </div>
           <div class="field">
             <label for="message">Message</label>
@@ -173,11 +179,12 @@
               id="message"
               rows="6"
               placeholder="Message"
+              required
             ></textarea>
           </div>
           <ul class="actions">
             <li>
-              <input value="Send Message" class="button alt" type="submit" />
+              <input id="submit-btn" value="Send Message" class="button alt" type="submit" />
             </li>
           </ul>
         </form>
@@ -200,7 +207,7 @@
           </li>
         </ul>
       </div>
-    </footer>
+    </footer> -->
 
     <div class="copyright">
       Site made with love by the team at Throwing Eights
@@ -213,5 +220,6 @@
     <script src="assets/js/skel.min.js"></script>
     <script src="assets/js/util.js"></script>
     <script src="assets/js/main.js"></script>
+    <script src="assets/js/contact-form.js"></script>
   </body>
 </html>
